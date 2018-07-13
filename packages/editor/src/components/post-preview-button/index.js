@@ -154,10 +154,9 @@ export default compose( [
 			postId: getCurrentPostId(),
 			currentPostLink: getCurrentPostAttribute( 'link' ),
 			previewLink: getAutosaveAttribute( 'preview_link' ),
-			isDirty: isEditedPostDirty(),
 			isNew: isEditedPostNew(),
 			isSaveable: isEditedPostSaveable(),
-			isAutosaveable: isEditedPostAutosaveable(),
+			isAutosaveable: isEditedPostAutosaveable() && isEditedPostDirty(),
 			isViewable: get( postType, [ 'viewable' ], false ),
 		};
 	} ),
