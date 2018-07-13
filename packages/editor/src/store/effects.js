@@ -26,6 +26,7 @@ import {
 	selectBlock,
 	resetBlocks,
 	setTemplateValidity,
+	resetAutosave,
 } from './actions';
 import {
 	getBlock,
@@ -165,27 +166,30 @@ export default {
 		}
 
 		// Check the auto-save status
-		let autosaveAction;
+		let autosaveActions;
 		if ( autosave ) {
 			const noticeMessage = __( 'There is an autosave of this post that is more recent than the version below.' );
-			autosaveAction = createWarningNotice(
-				<p>
-					{ noticeMessage }
-					{ ' ' }
-					<a href={ autosave.editLink }>{ __( 'View the autosave' ) }</a>
-				</p>,
-				{
-					id: AUTOSAVE_POST_NOTICE_ID,
-					spokenMessage: noticeMessage,
-				}
-			);
+			autosaveActions = [
+				createWarningNotice(
+					<p>
+						{ noticeMessage }
+						{ ' ' }
+						<a href={ autosave.editLink }>{ __( 'View the autosave' ) }</a>
+					</p>,
+					{
+						id: AUTOSAVE_POST_NOTICE_ID,
+						spokenMessage: noticeMessage,
+					}
+				),
+				resetAutosave( autosave ),
+			];
 		}
 
 		const setupAction = setupEditorState( post, blocks, edits );
 
 		return compact( [
 			setupAction,
-			autosaveAction,
+			...( autosaveActions ? autosaveActions : [] ),
 
 			// TODO: This is temporary, necessary only so long as editor setup
 			// is a separate action from block resetting.
