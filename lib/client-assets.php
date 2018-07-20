@@ -780,7 +780,6 @@ function gutenberg_api_request( $path ) {
 		$request->set_query_params( $query_params );
 	}
 
-
 	// Ensure the global $post remains the same after the API request is made.
 	// Because API requests can call the_content and other filters, callbacks
 	// can unexpectedly modify $post resulting in issues
@@ -790,7 +789,7 @@ function gutenberg_api_request( $path ) {
 
 	$response = rest_do_request( $request );
 
-	// restore the global post
+	// restore the global post.
 	$post = $backup_global_post;
 
 	if ( 200 === $response->status ) {
@@ -822,7 +821,6 @@ function gutenberg_api_request( $path ) {
  * @return array        Modified reduce accumulator.
  */
 function gutenberg_preload_api_request( $memo, $path ) {
-
 	// array_reduce() doesn't support passing an array in PHP 5.2
 	// so we need to make sure we start with one.
 	if ( ! is_array( $memo ) ) {
