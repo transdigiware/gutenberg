@@ -766,18 +766,12 @@ add_action( 'admin_enqueue_scripts', 'gutenberg_register_scripts_and_styles', 5 
  */
 function gutenberg_api_request( $path ) {
 	if ( empty( $path ) ) {
-		return;
+		return null;
 	}
 
 	$path_parts = parse_url( $path );
 	if ( false === $path_parts ) {
-		return;
-	}
-
-	$request = new WP_REST_Request( 'GET', $path_parts['path'] );
-	if ( ! empty( $path_parts['query'] ) ) {
-		parse_str( $path_parts['query'], $query_params );
-		$request->set_query_params( $query_params );
+		return null;
 	}
 
 	// Ensure the global $post remains the same after the API request is made.
@@ -787,28 +781,38 @@ function gutenberg_api_request( $path ) {
 	global $post;
 	$backup_global_post = $post;
 
+	$request = new WP_REST_Request( 'GET', $path_parts['path'] );
+	if ( ! empty( $path_parts['query'] ) ) {
+		parse_str( $path_parts['query'], $query_params );
+		$request->set_query_params( $query_params );
+	}
+
 	$response = rest_do_request( $request );
 
 	// restore the global post.
 	$post = $backup_global_post;
 
-	if ( 200 === $response->status ) {
-		$server = rest_get_server();
-		$data   = (array) $response->get_data();
-		if ( method_exists( $server, 'get_compact_response_links' ) ) {
-			$links = call_user_func( array( $server, 'get_compact_response_links' ), $response );
-		} else {
-			$links = call_user_func( array( $server, 'get_response_links' ), $response );
-		}
-		if ( ! empty( $links ) ) {
-			$data['_links'] = $links;
-		}
-
-		return array(
-			'body'    => $data,
-			'headers' => $response->headers,
-		);
+	if ( 200 !== $response->status ) {
+		return null;
 	}
+
+	$server = rest_get_server();
+	$data   = (array) $response->get_data();
+
+	if ( method_exists( $server, 'get_compact_response_links' ) ) {
+		$links = call_user_func( array( $server, 'get_compact_response_links' ), $response );
+	} else {
+		$links = call_user_func( array( $server, 'get_response_links' ), $response );
+	}
+
+	if ( ! empty( $links ) ) {
+		$data['_links'] = $links;
+	}
+
+	return array(
+		'body'    => $data,
+		'headers' => $response->headers,
+	);
 }
 
 /**
@@ -827,14 +831,10 @@ function gutenberg_preload_api_request( $memo, $path ) {
 		$memo = array();
 	}
 
-	if ( empty( $path ) ) {
-		return $memo;
-	}
+	$api_response = gutenberg_api_request( $path );
 
-	$response = gutenberg_api_request( $path );
-
-	if ( isset( $response ) ) {
-		$memo[ $path ] = $response;
+	if ( isset( $api_response ) ) {
+		$memo[ $path ] = $api_response;
 	}
 
 	return $memo;
