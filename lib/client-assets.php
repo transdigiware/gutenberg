@@ -831,10 +831,10 @@ function gutenberg_preload_api_request( $memo, $path ) {
 		return $memo;
 	}
 
-	$reponse = gutenberg_api_request( $path );
+	$response = gutenberg_api_request( $path );
 
 	if ( isset( $response ) ) {
-		$memo[ $path ] = $reponse;
+		$memo[ $path ] = $response;
 	}
 
 	return $memo;
