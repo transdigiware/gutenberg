@@ -418,12 +418,12 @@ export class BlockListBlock extends Component {
 		const canShowInBetweenInserter = ! isEmptyDefaultBlock && ! isPreviousBlockADefaultEmptyBlock;
 
 		// We allow an invalid block to be re-edited in HTML mode
-		const isValidMode = isValid || mode === 'html';
+		const isValidOrHtmlMode = isValid || mode === 'html';
 
 		// The wp-block className is important for editor styles.
 		// Generate the wrapper class names handling the different states of the block.
 		const wrapperClassName = classnames( 'wp-block editor-block-list__block', {
-			'has-warning': ! isValid || !! error || isUnregisteredBlock || ! isValidMode,
+			'has-warning': !! error || isUnregisteredBlock || ! isValidOrHtmlMode,
 			'is-selected': shouldAppearSelected,
 			'is-multi-selected': isPartOfMultiSelection,
 			'is-hovered': shouldAppearHovered,
@@ -544,7 +544,7 @@ export class BlockListBlock extends Component {
 						{ mode === 'html' && (
 							<BlockHtml clientId={ clientId } />
 						) }
-						{ ! isValidMode && [
+						{ ! isValidOrHtmlMode && [
 							<BlockInvalidWarning
 								key="invalid-warning"
 								block={ block }
