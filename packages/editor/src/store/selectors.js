@@ -398,9 +398,23 @@ export function isEditedPostAutosaveable( state ) {
 		return true;
 	}
 
-	// If the title, excerpt or content has changed, the post is autosaveable.
+	const comparisonFields = [ 'title', 'excerpt', 'content' ];
+
+	// If the title, excerpt or content has not changed from the last save,
+	// the post is not autosaveable.
+	const savedPost = getCurrentPost( state );
+	const isModifiedFromLastSave = comparisonFields.some( ( field ) => (
+		savedPost[ field ] !== getEditedPostAttribute( state, field )
+	) );
+
+	if ( ! isModifiedFromLastSave ) {
+		return false;
+	}
+
+	// If the title, excerpt or content has not changed from the most recent autosave,
+	// the post is not autosaveable.
 	const autosave = getAutosave( state );
-	return [ 'title', 'excerpt', 'content' ].some( ( field ) => (
+	return comparisonFields.some( ( field ) => (
 		autosave[ field ] !== getEditedPostAttribute( state, field )
 	) );
 }

@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { filter, without } from 'lodash';
+import { filter } from 'lodash';
 
 /**
  * WordPress dependencies
@@ -1031,14 +1031,16 @@ describe( 'selectors', () => {
 			expect( isEditedPostAutosaveable( state ) ).toBe( true );
 		} );
 
-		it( 'should return false if none of title, excerpt, or content have changed', () => {
+		it( 'should return false if none of title, excerpt, or content have changed from the currentPost or autosave', () => {
 			const state = {
 				editor: {
 					present: {
 						blocksByClientId: {},
 						blockOrder: {},
 						edits: {
+							title: 'foo',
 							content: 'foo',
+							excerpt: 'foo',
 						},
 					},
 				},
@@ -1058,33 +1060,35 @@ describe( 'selectors', () => {
 			expect( isEditedPostAutosaveable( state ) ).toBe( false );
 		} );
 
-		it( 'should return true if title, excerpt, or content have changed', () => {
+		it( 'should return true if title, excerpt, or content have changed from the currentPost or autosave', () => {
 			for ( const variantField of [ 'title', 'excerpt', 'content' ] ) {
-				for ( const constantField of without( [ 'title', 'excerpt', 'content' ], variantField ) ) {
-					const state = {
-						editor: {
-							present: {
-								blocksByClientId: {},
-								blockOrder: {},
-								edits: {
-									content: 'foo',
-								},
+				const state = {
+					editor: {
+						present: {
+							blocksByClientId: {},
+							blockOrder: {},
+							edits: {
+								title: 'foo',
+								content: 'foo',
+								excerpt: 'foo',
+								[ variantField ]: 'bar',
 							},
 						},
-						currentPost: {
-							title: 'foo',
-							content: 'foo',
-							excerpt: 'foo',
-						},
-						saving: {},
-						autosave: {
-							[ constantField ]: 'foo',
-							[ variantField ]: 'bar',
-						},
-					};
+					},
+					currentPost: {
+						title: 'foo',
+						content: 'foo',
+						excerpt: 'foo',
+					},
+					saving: {},
+					autosave: {
+						title: 'foo',
+						content: 'foo',
+						excerpt: 'foo',
+					},
+				};
 
-					expect( isEditedPostAutosaveable( state ) ).toBe( true );
-				}
+				expect( isEditedPostAutosaveable( state ) ).toBe( true );
 			}
 		} );
 	} );

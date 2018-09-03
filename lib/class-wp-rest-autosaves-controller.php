@@ -283,6 +283,26 @@ class WP_REST_Autosaves_Controller extends WP_REST_Revisions_Controller {
 	}
 
 	/**
+	 * Checks whether the post data has the same values for common fields.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param array  $post_data An associative array of post data.
+	 * @param object $comparison_post A post object to compare against.
+	 *
+	 * @return boolean Do the posts have the same value for common fields.
+	 */
+	public function is_post_equal( $post_data, $comparison_post ) {
+		foreach ( array_intersect( array_keys( $post_data ), array_keys( _wp_post_revision_fields( $comparison_post ) ) ) as $field ) {
+			if ( normalize_whitespace( $post_data[ $field ] ) != normalize_whitespace( $comparison_post->$field ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Creates autosave for the specified post.
 	 *
 	 * From wp-admin/post.php.
@@ -311,19 +331,17 @@ class WP_REST_Autosaves_Controller extends WP_REST_Revisions_Controller {
 			$new_autosave['ID']          = $old_autosave->ID;
 			$new_autosave['post_author'] = $user_id;
 
-			// If the new autosave has the same content as the post, delete the autosave.
-			$autosave_is_different = false;
-
-			foreach ( array_intersect( array_keys( $new_autosave ), array_keys( _wp_post_revision_fields( $post ) ) ) as $field ) {
-				if ( normalize_whitespace( $new_autosave[ $field ] ) != normalize_whitespace( $post->$field ) ) {
-					$autosave_is_different = true;
-					break;
-				}
-			}
-
-			if ( ! $autosave_is_different ) {
+			// If the new autosave has the same content as the post, delete the autosave and return an error.
+			if ( $this->is_post_equal( $new_autosave, $post ) ) {
 				wp_delete_post_revision( $old_autosave->ID );
 				return new WP_Error( 'rest_autosave_no_changes', __( 'There is nothing to save. The autosave and the post content are the same.', 'gutenberg' ), array( 'status' => 400 ) );
+			}
+
+			// If there's an autosave newer than the last save of the post, also check against that and don't save if they're equal.
+			$old_autosave_modified_date = mysql2date( 'U', $old_autosave->post_modified_gmt, false );
+			$post_modified_date         = mysql2date( 'U', $post->post_modified_gmt, false );
+			if ( $old_autosave_modified_date > $post_modified_date && $this->is_post_equal( $new_autosave, $old_autosave ) ) {
+				return new WP_Error( 'rest_autosave_no_changes', __( 'There is nothing to save. The autosave has the same content as the most recent autosave.', 'gutenberg' ), array( 'status' => 400 ) );
 			}
 
 			/**
