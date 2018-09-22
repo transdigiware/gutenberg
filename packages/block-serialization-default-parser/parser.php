@@ -244,17 +244,19 @@ class WP_Block_Parser {
                  */
                 if ( 0 === $stack_depth ) {
                     if ( isset( $leading_html_start ) ) {
-                        $this->output[] = array(
-                            'attrs' => array(),
-                            'innerHTML' => substr(
-                                $this->document,
-                                $leading_html_start,
-                                $start_offset - $leading_html_start
-                            ),
-                        );
+						$block = array(
+							'attrs' => array(),
+							'innerHTML' => substr(
+								$this->document,
+								$leading_html_start,
+								$start_offset - $leading_html_start
+							),
+						);
+
+						$this->output[] = self::filter_block( $block );
                     }
 
-                    $this->output[] = new WP_Block_Parser_Block( $block_name, $attrs, array(), '' );
+                    $this->output[] = self::filter_block( new WP_Block_Parser_Block( $block_name, $attrs, array(), '' ) );
                     $this->offset = $start_offset + $token_length;
                     return true;
                 }
@@ -458,4 +460,17 @@ class WP_Block_Parser {
 
         $this->output[] = $stack_top->block;
     }
+
+    static function filter_block( &$block ) {
+    	if ( ! function_exists( 'apply_filters' ) ) {
+    		return $block;
+		}
+
+		/**
+		 * Filter to allow plugins to process blocks after parsing
+		 *
+		 * @since 4.0.0
+		 */
+		return apply_filters( 'block_post_parse', $block );
+	}
 }

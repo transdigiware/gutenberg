@@ -92,6 +92,21 @@ if ( ! function_exists( 'peg_join_blocks' ) ) {
     }
 }
 
+if ( ! function_exists( 'peg_filter_block' ) ) {
+    function peg_filter_block( &$block ) {
+        if ( ! function_exists( 'apply_filters' ) ) {
+            return $block;
+        }
+
+        /**
+         * Filter to allow plugins to process blocks after parsing
+         *
+         * @since 4.0.0
+         */
+        return apply_filters( 'block_post_parse', $block );
+    }
+}
+
 ?> **/
 
 function freeform( s ) {
@@ -152,6 +167,18 @@ function partition( predicate, list ) {
     return [ truthy, falsey ];
 }
 
+function filterBlock( block ) {
+    if (
+        'undefined' === typeof wp ||
+        'undefined' === typeof wp.hooks ||
+        'function' !== typeof wp.hooks.applyFilters
+    ) {
+        return block;
+    }
+
+    return wp.hooks.applyFilters( 'blocks.postParse', block );
+}
+
 }
 
 //////////////////////////////////////////////////////
@@ -179,20 +206,22 @@ Block_Void
   })? "/-->"
   {
     /** <?php
-    return array(
+    $block = array(
       'blockName'  => $blockName,
       'attrs'      => $attrs,
       'innerBlocks' => array(),
       'innerHTML' => '',
     );
+
+    return peg_filter_block( $block );
     ?> **/
 
-    return {
+    return filterBlock( {
       blockName: blockName,
       attrs: attrs,
       innerBlocks: [],
       innerHTML: ''
-    };
+    } );
   }
 
 Block_Balanced
@@ -201,24 +230,26 @@ Block_Balanced
     /** <?php
     list( $innerHTML, $innerBlocks ) = peg_array_partition( $children, 'is_string' );
 
-    return array(
+    $block = array(
       'blockName'  => $s['blockName'],
       'attrs'      => $s['attrs'],
       'innerBlocks'  => $innerBlocks,
       'innerHTML'  => implode( '', $innerHTML ),
     );
+
+    return peg_filter_block( $block );
     ?> **/
 
     var innerContent = partition( function( a ) { return 'string' === typeof a }, children );
     var innerHTML = innerContent[ 0 ];
     var innerBlocks = innerContent[ 1 ];
 
-    return {
+    return filterBlock( {
       blockName: s.blockName,
       attrs: s.attrs,
       innerBlocks: innerBlocks,
       innerHTML: innerHTML.join( '' )
-    };
+    } );
   }
 
 Block_Start

@@ -23,6 +23,18 @@ function Frame( block, tokenStart, tokenLength, prevOffset, leadingHtmlStart ) {
 	};
 }
 
+function filterBlock( block ) {
+	if (
+		'undefined' === typeof wp ||
+		'undefined' === typeof wp.hooks ||
+		'function' !== typeof wp.hooks.applyFilters
+	) {
+		return block;
+	}
+
+	return wp.hooks.applyFilters( 'blocks.postParse', block );
+}
+
 export const parse = ( doc ) => {
 	document = doc;
 	offset = 0;
@@ -78,12 +90,12 @@ function proceed() {
 			// in the top-level of the document
 			if ( 0 === stackDepth ) {
 				if ( null !== leadingHtmlStart ) {
-					output.push( {
+					output.push( filterBlock( {
 						attrs: {},
 						innerHTML: document.substr( leadingHtmlStart, startOffset - leadingHtmlStart ),
-					} );
+					} ) );
 				}
-				output.push( Block( blockName, attrs, [], '' ) );
+				output.push( filterBlock( Block( blockName, attrs, [], '' ) ) );
 				offset = startOffset + tokenLength;
 				return true;
 			}
@@ -227,10 +239,10 @@ function addFreeform( rawLength ) {
 	// specifies an object that's different. we can update the
 	// specification and change here if we want to but for now we
 	// want this parser to be spec-compliant
-	output.push( {
+	output.push( filterBlock( {
 		attrs: {},
 		innerHTML: document.substr( offset, length ),
-	} );
+	} ) );
 }
 
 function addInnerBlock( block, tokenStart, tokenLength, lastOffset ) {
@@ -253,11 +265,11 @@ function addBlockFromStack( endOffset ) {
 	}
 
 	if ( null !== leadingHtmlStart ) {
-		output.push( {
+		output.push( filterBlock( {
 			attrs: {},
 			innerHTML: document.substr( leadingHtmlStart, tokenStart - leadingHtmlStart ),
-		} );
+		} ) );
 	}
 
-	output.push( block );
+	output.push( filterBlock( block ) );
 }
