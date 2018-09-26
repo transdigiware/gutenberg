@@ -26,7 +26,6 @@ import {
 	getCurrentPost,
 	getPostEdits,
 	getEditedPostContent,
-	getAutosave,
 	getCurrentPostType,
 	isEditedPostAutosaveable,
 	isEditedPostSaveable,
@@ -105,11 +104,10 @@ export const requestPostUpdate = async ( action, store ) => {
 
 	let request;
 	if ( isAutosave ) {
-		// Ensure autosaves contain all expected fields, using autosave or
-		// post values as fallback if not otherwise included in edits.
+		// Ensure autosaves contain all expected fields, using post
+		// values as fallback if not otherwise included in edits.
 		toSend = {
 			...pick( post, [ 'title', 'content', 'excerpt' ] ),
-			...getAutosave( state ),
 			...toSend,
 			parent: post.id,
 		};
