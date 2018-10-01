@@ -782,7 +782,7 @@ export class RichText extends Component {
 			) {
 				record = applyFormat(
 					record,
-					{ type: 'mark' },
+					{ type: 'mark', attributes: { class: 'annotation-text annotation-text-' + annotation.source } },
 					startPos,
 					endPos
 				);
