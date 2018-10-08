@@ -141,7 +141,6 @@ export default compose( [
 			getCurrentPostAttribute,
 			getAutosaveAttribute,
 			getEditedPostAttribute,
-			isEditedPostDirty,
 			isEditedPostNew,
 			isEditedPostSaveable,
 			isEditedPostAutosaveable,
@@ -156,7 +155,7 @@ export default compose( [
 			previewLink: getAutosaveAttribute( 'preview_link' ),
 			isNew: isEditedPostNew(),
 			isSaveable: isEditedPostSaveable(),
-			isAutosaveable: isEditedPostAutosaveable() && isEditedPostDirty(),
+			isAutosaveable: isEditedPostAutosaveable(),
 			isViewable: get( postType, [ 'viewable' ], false ),
 		};
 	} ),

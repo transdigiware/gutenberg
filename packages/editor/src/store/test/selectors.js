@@ -991,9 +991,29 @@ describe( 'selectors', () => {
 	} );
 
 	describe( 'isEditedPostAutosaveable', () => {
+		it( 'should return false if the post is not dirty', () => {
+			const state = {
+				editor: {
+					isDirty: false,
+					present: {
+						blocksByClientId: {},
+						blockOrder: {},
+						edits: {},
+					},
+				},
+				currentPost: {
+					title: 'sassel',
+				},
+				saving: {},
+				autosave: null,
+			};
+
+			expect( isEditedPostAutosaveable( state ) ).toBe( false );
+		} );
 		it( 'should return false if the post is not saveable', () => {
 			const state = {
 				editor: {
+					isDirty: true,
 					present: {
 						blocksByClientId: {},
 						blockOrder: {},
@@ -1017,6 +1037,7 @@ describe( 'selectors', () => {
 		it( 'should return true if there is not yet an autosave', () => {
 			const state = {
 				editor: {
+					isDirty: true,
 					present: {
 						blocksByClientId: {},
 						blockOrder: {},
@@ -1036,6 +1057,7 @@ describe( 'selectors', () => {
 		it( 'should return false if none of title, excerpt, or content have changed', () => {
 			const state = {
 				editor: {
+					isDirty: true,
 					present: {
 						blocksByClientId: {},
 						blockOrder: {},
@@ -1065,6 +1087,7 @@ describe( 'selectors', () => {
 				for ( const constantField of without( [ 'title', 'excerpt', 'content' ], variantField ) ) {
 					const state = {
 						editor: {
+							isDirty: true,
 							present: {
 								blocksByClientId: {},
 								blockOrder: {},
