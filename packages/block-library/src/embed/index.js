@@ -388,7 +388,7 @@ const embedAttributes = {
 	},
 };
 
-function getEmbedBlockSettings( { title, description, icon, category = 'embed', transforms, keywords = [], supports = {} } ) {
+function getEmbedBlockSettings( { title, description, icon, category = 'embed', transforms, keywords = [], supports = {}, interactive = true } ) {
 	// translators: %s: Name of service (e.g. VideoPress, YouTube)
 	const blockDescription = description || sprintf( __( 'Add a block that displays content pulled from other sites, like Twitter, Instagram or YouTube.' ), title );
 	return {
@@ -422,6 +422,7 @@ function getEmbedBlockSettings( { title, description, icon, category = 'embed', 
 					preview: validPreview && preview,
 					previewIsFallback,
 					fetching,
+					interactive,
 				};
 			} )
 		)( getEmbedEdit( title, icon ) ),
@@ -498,6 +499,7 @@ export const settings = getEmbedBlockSettings( {
 			},
 		],
 	},
+	interactive: false,
 } );
 
 export const common = [
