@@ -246,6 +246,9 @@ export function getBlockAttribute( attributeKey, attributeSchema, innerHTML, com
 		case undefined:
 			value = commentAttributes ? commentAttributes[ attributeKey ] : undefined;
 			break;
+		case 'raw':
+			value = innerHTML;
+			break;
 		case 'attribute':
 		case 'property':
 		case 'html':

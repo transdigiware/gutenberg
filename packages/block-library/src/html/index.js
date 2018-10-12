@@ -30,7 +30,7 @@ export const settings = {
 	attributes: {
 		content: {
 			type: 'string',
-			source: 'html',
+			source: 'raw',
 		},
 	},
 

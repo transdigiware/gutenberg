@@ -292,6 +292,34 @@ describe( 'block parser', () => {
 			);
 			expect( value ).toBeUndefined();
 		} );
+
+		it( 'should return raw content for raw type', () => {
+			const value = getBlockAttribute(
+				'content',
+				{
+					type: 'string',
+					source: 'raw',
+				},
+				'<path />',
+				{}
+			);
+
+			expect( value ).toBe( '<path />' );
+		} );
+
+		it( 'should return parsed content for html type', () => {
+			const value = getBlockAttribute(
+				'content',
+				{
+					type: 'string',
+					source: 'html',
+				},
+				'<path />',
+				{}
+			);
+
+			expect( value ).toBe( '<path></path>' );
+		} );
 	} );
 
 	describe( 'getBlockAttributes()', () => {
