@@ -194,6 +194,7 @@ describe( 'actions', () => {
 				index,
 				rootClientId: 'testclientid',
 				time: expect.any( Number ),
+				updateSelection: true,
 			} );
 		} );
 	} );
@@ -210,6 +211,7 @@ describe( 'actions', () => {
 				index,
 				rootClientId: 'testclientid',
 				time: expect.any( Number ),
+				updateSelection: true,
 			} );
 		} );
 	} );

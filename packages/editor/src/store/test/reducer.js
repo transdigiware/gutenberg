@@ -1469,6 +1469,7 @@ describe( 'state', () => {
 					clientId: 'ribs',
 					name: 'core/freeform',
 				} ],
+				updateSelection: true,
 			} );
 
 			expect( state3 ).toEqual( {
@@ -1476,6 +1477,24 @@ describe( 'state', () => {
 				end: 'ribs',
 				initialPosition: null,
 				isMultiSelecting: false,
+			} );
+		} );
+
+		it( 'should not select inserted block if updateSelection flag is false', () => {
+			const original = deepFreeze( { start: 'a', end: 'b' } );
+
+			const state3 = blockSelection( original, {
+				type: 'INSERT_BLOCKS',
+				blocks: [ {
+					clientId: 'ribs',
+					name: 'core/freeform',
+				} ],
+				updateSelection: false,
+			} );
+
+			expect( state3 ).toEqual( {
+				start: 'a',
+				end: 'b',
 			} );
 		} );
 
