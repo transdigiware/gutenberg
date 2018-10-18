@@ -881,7 +881,7 @@ export class RichText extends Component {
 				ref={ this.containerRef }
 				onFocus={ this.setFocusedElement }
 			>
-				{ isSelected && this.multilineTag === 'li' && (
+				{ isSelected && this.editor && this.multilineTag === 'li' && (
 					<BlockFormatControls>
 						<ListToolbar
 							editor={ this.editor }
