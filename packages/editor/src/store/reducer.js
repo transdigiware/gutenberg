@@ -231,20 +231,27 @@ export const editor = flow( [
 		switch ( action.type ) {
 			case 'EDIT_POST':
 			case 'SETUP_EDITOR_STATE':
-				return reduce( action.edits, ( result, value, key ) => {
-					// Only assign into result if not already same value
-					if ( value !== state[ key ] ) {
-						// Avoid mutating original state by creating shallow
-						// clone. Should only occur once per reduce.
-						if ( result === state ) {
-							result = { ...state };
+				const recurseEdits = ( edits, newState ) => {
+					return reduce( edits, ( result, value, key ) => {
+						// Only assign into result if not already same value
+						if ( value !== newState[ key ] ) {
+							// Avoid mutating original state by creating shallow
+							// clone. Should only occur once per reduce.
+							if ( result === newState ) {
+								result = { ...newState };
+							}
+
+							if ( typeof newState[ key ] === 'object' ) {
+								result[ key ] = recurseEdits( value, newState[ key ] );
+							} else {
+								result[ key ] = value;
+							}
 						}
+						return result;
+					}, newState );
+				};
 
-						result[ key ] = value;
-					}
-
-					return result;
-				}, state );
+				return recurseEdits( action.edits, state );
 
 			case 'RESET_BLOCKS':
 				if ( 'content' in state ) {
