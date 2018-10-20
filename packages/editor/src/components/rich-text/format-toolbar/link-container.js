@@ -170,7 +170,7 @@ class LinkContainer extends Component {
 		this.resetState();
 
 		if ( ! link ) {
-			this.props.speak( __( 'Link added.' ), 'assertive' );
+			this.props.speak( __( 'Link inserted' ), 'assertive' );
 		}
 
 		event.preventDefault();
