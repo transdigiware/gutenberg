@@ -29,6 +29,7 @@ const {
 	hasEditorUndo,
 	hasEditorRedo,
 	isEditedPostNew,
+	hasChangedContent,
 	isEditedPostDirty,
 	isCleanNewPost,
 	getCurrentPost,
@@ -269,14 +270,100 @@ describe( 'selectors', () => {
 		} );
 	} );
 
-	describe( 'isEditedPostDirty', () => {
-		it( 'should return true when post saved state dirty', () => {
+	describe( 'hasChangedContent', () => {
+		it( 'should return false if no dirty blocks nor content property edit', () => {
 			const state = {
 				editor: {
-					isDirty: true,
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {},
+					},
 				},
-				saving: {
-					requesting: false,
+			};
+
+			expect( hasChangedContent( state ) ).toBe( false );
+		} );
+
+		it( 'should return true if dirty blocks', () => {
+			const state = {
+				editor: {
+					present: {
+						blocks: {
+							isDirty: true,
+						},
+						edits: {},
+					},
+				},
+			};
+
+			expect( hasChangedContent( state ) ).toBe( true );
+		} );
+
+		it( 'should return true if content property edit', () => {
+			const state = {
+				editor: {
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {
+							content: 'text mode edited',
+						},
+					},
+				},
+			};
+
+			expect( hasChangedContent( state ) ).toBe( true );
+		} );
+	} );
+
+	describe( 'isEditedPostDirty', () => {
+		it( 'should return false when blocks state not dirty nor edits exist', () => {
+			const state = {
+				optimist: [],
+				editor: {
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {},
+					},
+				},
+			};
+
+			expect( isEditedPostDirty( state ) ).toBe( false );
+		} );
+
+		it( 'should return true when blocks state dirty', () => {
+			const state = {
+				optimist: [],
+				editor: {
+					present: {
+						blocks: {
+							isDirty: true,
+						},
+						edits: {},
+					},
+				},
+			};
+
+			expect( isEditedPostDirty( state ) ).toBe( true );
+		} );
+
+		it( 'should return true when edits exist', () => {
+			const state = {
+				optimist: [],
+				editor: {
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {
+							excerpt: 'hello world',
+						},
+					},
 				},
 			};
 
@@ -289,30 +376,27 @@ describe( 'selectors', () => {
 					{
 						beforeState: {
 							editor: {
-								isDirty: true,
+								present: {
+									blocks: {
+										isDirty: true,
+									},
+									edits: {},
+								},
 							},
 						},
 					},
 				],
 				editor: {
-					isDirty: false,
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {},
+					},
 				},
 			};
 
 			expect( isEditedPostDirty( state ) ).toBe( true );
-		} );
-
-		it( 'should return false when post saved state not dirty', () => {
-			const state = {
-				editor: {
-					isDirty: false,
-				},
-				saving: {
-					requesting: false,
-				},
-			};
-
-			expect( isEditedPostDirty( state ) ).toBe( false );
 		} );
 	} );
 
@@ -320,7 +404,12 @@ describe( 'selectors', () => {
 		it( 'should return true when the post is not dirty and has not been saved before', () => {
 			const state = {
 				editor: {
-					isDirty: false,
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {},
+					},
 				},
 				currentPost: {
 					id: 1,
@@ -337,7 +426,12 @@ describe( 'selectors', () => {
 		it( 'should return false when the post is not dirty but the post has been saved', () => {
 			const state = {
 				editor: {
-					isDirty: false,
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {},
+					},
 				},
 				currentPost: {
 					id: 1,
@@ -354,7 +448,12 @@ describe( 'selectors', () => {
 		it( 'should return false when the post is dirty but the post has not been saved', () => {
 			const state = {
 				editor: {
-					isDirty: true,
+					present: {
+						blocks: {
+							isDirty: true,
+						},
+						edits: {},
+					},
 				},
 				currentPost: {
 					id: 1,
@@ -798,7 +897,12 @@ describe( 'selectors', () => {
 		it( 'should return true for pending posts', () => {
 			const state = {
 				editor: {
-					isDirty: false,
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {},
+					},
 				},
 				currentPost: {
 					status: 'pending',
@@ -814,7 +918,12 @@ describe( 'selectors', () => {
 		it( 'should return true for draft posts', () => {
 			const state = {
 				editor: {
-					isDirty: false,
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {},
+					},
 				},
 				currentPost: {
 					status: 'draft',
@@ -830,7 +939,12 @@ describe( 'selectors', () => {
 		it( 'should return false for published posts', () => {
 			const state = {
 				editor: {
-					isDirty: false,
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {},
+					},
 				},
 				currentPost: {
 					status: 'publish',
@@ -846,7 +960,12 @@ describe( 'selectors', () => {
 		it( 'should return true for published, dirty posts', () => {
 			const state = {
 				editor: {
-					isDirty: true,
+					present: {
+						blocks: {
+							isDirty: true,
+						},
+						edits: {},
+					},
 				},
 				currentPost: {
 					status: 'publish',
@@ -862,7 +981,12 @@ describe( 'selectors', () => {
 		it( 'should return false for private posts', () => {
 			const state = {
 				editor: {
-					isDirty: false,
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {},
+					},
 				},
 				currentPost: {
 					status: 'private',
@@ -878,7 +1002,12 @@ describe( 'selectors', () => {
 		it( 'should return false for scheduled posts', () => {
 			const state = {
 				editor: {
-					isDirty: false,
+					present: {
+						blocks: {
+							isDirty: false,
+						},
+						edits: {},
+					},
 				},
 				currentPost: {
 					status: 'future',
@@ -897,7 +1026,12 @@ describe( 'selectors', () => {
 					status: 'private',
 				},
 				editor: {
-					isDirty: true,
+					present: {
+						blocks: {
+							isDirty: true,
+						},
+						edits: {},
+					},
 				},
 				saving: {
 					requesting: false,
