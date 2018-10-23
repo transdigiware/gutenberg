@@ -100,10 +100,6 @@ class InnerBlocks extends Component {
 	render() {
 		const {
 			clientId,
-			layouts,
-			allowedBlocks,
-			templateLock,
-			template,
 			isSmallScreen,
 			isSelectedBlockInRoot,
 		} = this.props;
@@ -118,7 +114,6 @@ class InnerBlocks extends Component {
 				{ ! templateInProcess && (
 					<BlockList
 						rootClientId={ clientId }
-						{ ...{ layouts, allowedBlocks, templateLock, template } }
 					/>
 				) }
 			</div>
