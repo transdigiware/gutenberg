@@ -15,10 +15,6 @@ exports[`InnerBlocks Template Sync Ensures blocks without locking are kept intac
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p></p>
-<!-- /wp:paragraph -->
-
-<!-- wp:paragraph -->
 <p>added paragraph</p>
 <!-- /wp:paragraph -->
 <!-- /wp:test/test-inner-blocks-no-locking -->"
