@@ -79,6 +79,23 @@ export const name = 'core/cover';
 const ALLOWED_MEDIA_TYPES = [ 'image', 'video' ];
 const IMAGE_BACKGROUND_TYPE = 'image';
 const VIDEO_BACKGROUND_TYPE = 'video';
+const COVER_TEXT_ALIGN_CONTROLS = [
+	{
+		icon: 'editor-alignleft',
+		title: __( 'Text align left' ),
+		align: 'left',
+	},
+	{
+		icon: 'editor-aligncenter',
+		title: __( 'Text align center' ),
+		align: 'center',
+	},
+	{
+		icon: 'editor-alignright',
+		title: __( 'Text align right' ),
+		align: 'right',
+	},
+];
 
 export const settings = {
 	title: __( 'Cover' ),
@@ -257,6 +274,7 @@ export const settings = {
 									onChange={ ( nextAlign ) => {
 										setAttributes( { contentAlign: nextAlign } );
 									} }
+									alignmentControls={ COVER_TEXT_ALIGN_CONTROLS }
 								/>
 								<Toolbar>
 									<MediaUpload

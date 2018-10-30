@@ -35,19 +35,19 @@ const ALIGNMENT_CONTROLS = [
 	},
 ];
 
-export function AlignmentToolbar( { isCollapsed, value, onChange } ) {
+export function AlignmentToolbar( { isCollapsed, value, onChange, alignmentControls = ALIGNMENT_CONTROLS } ) {
 	function applyOrUnset( align ) {
 		return () => onChange( value === align ? undefined : align );
 	}
 
-	const activeAlignment = find( ALIGNMENT_CONTROLS, ( control ) => control.align === value );
+	const activeAlignment = find( alignmentControls, ( control ) => control.align === value );
 
 	return (
 		<Toolbar
 			isCollapsed={ isCollapsed }
 			icon={ activeAlignment ? activeAlignment.icon : 'editor-alignleft' }
 			label={ __( 'Change Text Alignment' ) }
-			controls={ ALIGNMENT_CONTROLS.map( ( control ) => {
+			controls={ alignmentControls.map( ( control ) => {
 				const { align } = control;
 				const isActive = ( value === align );
 
