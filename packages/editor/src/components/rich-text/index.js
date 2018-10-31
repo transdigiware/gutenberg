@@ -641,7 +641,9 @@ export class RichText extends Component {
 			blocks.push( onSplitMiddle() );
 		}
 
-		blocks.push( onSplit( this.valueToFormat( after ) ) );
+		if ( ! onSplitMiddle || ! isEmpty( after ) ) {
+			blocks.push( onSplit( this.valueToFormat( after ) ) );
+		}
 
 		onReplace( blocks, 1 );
 	}
