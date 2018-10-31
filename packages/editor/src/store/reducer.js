@@ -678,7 +678,7 @@ export function blockSelection( state = {
 
 			// If there is replacement block(s), assign first's client ID as
 			// the next selected block. If empty replacement, reset to null.
-			const nextSelectedBlockClientId = get( action.blocks, [ 0, 'clientId' ], null );
+			const nextSelectedBlockClientId = get( action.blocks, [ action.index || 0, 'clientId' ], null );
 
 			return {
 				...state,

@@ -296,7 +296,6 @@ export const settings = {
 		render() {
 			const {
 				attributes,
-				insertBlocksAfter,
 				mergeBlocks,
 				onReplace,
 				className,
@@ -343,24 +342,9 @@ export const settings = {
 						className={ className }
 						placeholder={ __( 'Write list…' ) }
 						onMerge={ mergeBlocks }
-						onInsertAfter={
-							insertBlocksAfter ?
-								( value ) => {
-									const blocks = [
-										createBlock( 'core/paragraph' ),
-									];
-
-									if ( value !== '<li></li>' ) {
-										blocks.push( createBlock( 'core/list', {
-											ordered,
-											values: value,
-										} ) );
-									}
-
-									insertBlocksAfter( blocks );
-								} :
-								undefined
-						}
+						onSplit={ ( value ) => createBlock( name, { values: value } ) }
+						onSplitMiddle={ () => createBlock( 'core/paragraph' ) }
+						onReplace={ onReplace }
 						onRemove={ () => onReplace( [] ) }
 					/>
 				</Fragment>

@@ -54,10 +54,9 @@ class ParagraphBlock extends Component {
 
 		this.onReplace = this.onReplace.bind( this );
 		this.toggleDropCap = this.toggleDropCap.bind( this );
-		this.onInsertAfter = this.onInsertAfter.bind( this );
 	}
 
-	onReplace( blocks ) {
+	onReplace( blocks, indexToSelect ) {
 		const { attributes, onReplace } = this.props;
 		onReplace( blocks.map( ( block, index ) => (
 			index === 0 && block.name === name ?
@@ -68,7 +67,7 @@ class ParagraphBlock extends Component {
 					},
 				} :
 				block
-		) ) );
+		) ), indexToSelect );
 	}
 
 	toggleDropCap() {
@@ -78,12 +77,6 @@ class ParagraphBlock extends Component {
 
 	getDropCapHelp( checked ) {
 		return checked ? __( 'Showing large initial letter.' ) : __( 'Toggle to show a large initial letter.' );
-	}
-
-	onInsertAfter( value ) {
-		this.props.insertBlocksAfter( [
-			createBlock( name, { content: value } ),
-		] );
 	}
 
 	render() {
@@ -103,7 +96,6 @@ class ParagraphBlock extends Component {
 			fontSize,
 			setFontSize,
 			isRTL,
-			insertBlocksAfter,
 		} = this.props;
 
 		const {
@@ -205,8 +197,7 @@ class ParagraphBlock extends Component {
 							content: nextContent,
 						} );
 					} }
-					onInsertAfter={ insertBlocksAfter ? this.onInsertAfter : undefined }
-					onPasteBlocks={ insertBlocksAfter }
+					onSplit={ ( value ) => createBlock( name, { content: value } ) }
 					onMerge={ mergeBlocks }
 					onReplace={ this.onReplace }
 					onRemove={ () => onReplace( [] ) }

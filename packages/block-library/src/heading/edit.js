@@ -16,7 +16,6 @@ export default function HeadingEdit( {
 	attributes,
 	setAttributes,
 	mergeBlocks,
-	insertBlocksAfter,
 	onReplace,
 	className,
 } ) {
@@ -47,16 +46,17 @@ export default function HeadingEdit( {
 				value={ content }
 				onChange={ ( value ) => setAttributes( { content: value } ) }
 				onMerge={ mergeBlocks }
-				onInsertAfter={
-					insertBlocksAfter ?
-						( value ) => {
-							insertBlocksAfter( [
-								createBlock( 'core/paragraph', { content: value } ),
-							] );
-						} :
-						undefined
-				}
-				onPasteBlocks={ insertBlocksAfter }
+				onSplit={ ( value ) => {
+					if ( ! value ) {
+						return createBlock( 'core/paragraph' );
+					}
+
+					return createBlock( 'core/heading', {
+						...attributes,
+						content: value,
+					} );
+				} }
+				onReplace={ onReplace }
 				onRemove={ () => onReplace( [] ) }
 				style={ { textAlign: align } }
 				className={ className }
