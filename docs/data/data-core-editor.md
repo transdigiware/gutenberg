@@ -1381,6 +1381,19 @@ or skipped when the user clicks the "publish" button.
 
 Whether the pre-publish panel should be shown or not.
 
+### getAnnotationsForBlock
+
+Returns the annotations for a specific client ID.
+
+*Parameters*
+
+ * state: Editor state.
+ * clientId: The ID of the block to get the annotations for.
+
+*Returns*
+
+The annotations applicable to this block.
+
 ## Actions
 
 ### setupEditor
@@ -1782,6 +1795,54 @@ Returns an action object used to signal that post saving is unlocked.
 *Parameters*
 
  * lockName: The lock name.
+
+### addAnnotation
+
+Adds an annotation to a block.
+
+The `block` attribute refers to a block ID that needs to be annotated.
+`isBlockAnnotation` controls whether or not the annotation is a block
+annotation. The `source` is the source of the annotation, this will be used
+to identity groups of annotations.
+
+The `startXpath`, `startOffset`, `endXPath` and `endOffset` arguments are
+only relevant when the annotation is not a block annotation.
+
+*Parameters*
+
+ * annotation: The annotation to add.
+ * block: The block to add the annotation to.
+ * startXPath: The XPath where the annotation should start.
+ * startOffset: The offset where the annotation should start.
+ * endXPath: The XPath where the annotation should end.
+ * endOffset: The offset where the annotation should end.
+ * string: [source="default"] The source that added the annotation.
+ * string: [id=uuid()]        The ID the annotation should have. Generates a UUID by default.
+
+### removeAnnotation
+
+Removes an annotation with a specific ID.
+
+*Parameters*
+
+ * annotationId: The annotation to remove.
+
+### removeAnnotationsBySource
+
+Removes all annotations of a specific source.
+
+*Parameters*
+
+ * source: The source to remove.
+
+### moveAnnotation
+
+Moves an annotation to a different XPath.
+
+*Parameters*
+
+ * annotationId: The annotation to change.
+ * xpath: The new location for the annotation.
 
 ### createNotice
 
