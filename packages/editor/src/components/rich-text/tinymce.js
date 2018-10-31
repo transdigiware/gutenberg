@@ -164,7 +164,7 @@ export default class TinyMCE extends Component {
 			// already with dangerouslySetInnerHTML, we don't need this to be
 			// verified.
 			verify_html: false,
-			inline_boundaries_selector: 'a[href],code,b,i,strong,em,del,ins,sup,sub',
+			// inline_boundaries_selector: 'a[href],code,b,i,strong,em,del,ins,sup,sub',
 			plugins: [],
 		} );
 

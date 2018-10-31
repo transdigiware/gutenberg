@@ -445,7 +445,8 @@ export class RichText extends Component {
 			return;
 		}
 
-		const { start, end, formats } = this.createRecord();
+		const value = this.createRecord();
+		const { start, end, formats } = value;
 
 		if ( start !== this.state.start || end !== this.state.end ) {
 			const isCaretWithinFormattedText = this.props.isCaretWithinFormattedText;
@@ -456,6 +457,7 @@ export class RichText extends Component {
 			}
 
 			this.setState( { start, end } );
+			this.applyRecord( value );
 		}
 	}
 
@@ -468,9 +470,9 @@ export class RichText extends Component {
 	 *                                the live DOM.
 	 */
 	onChange( record, _withoutApply ) {
-		if ( ! _withoutApply ) {
+		// if ( ! _withoutApply ) {
 			this.applyRecord( record );
-		}
+		// }
 
 		const { start, end } = record;
 
