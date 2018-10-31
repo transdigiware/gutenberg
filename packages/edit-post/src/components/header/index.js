@@ -50,7 +50,7 @@ function Header( {
 						forceIsDirty={ hasActiveMetaboxes }
 						forceIsSaving={ isSaving }
 					/>
-					<div>
+					<div className="edit-post-header__settings-button-wrapper">
 						<IconButton
 							icon="admin-generic"
 							label={ __( 'Settings' ) }
@@ -59,7 +59,11 @@ function Header( {
 							aria-expanded={ isEditorSidebarOpened }
 							shortcut={ shortcuts.toggleSidebar }
 						/>
-						<DotTip tipId="core/editor.settings">
+						<DotTip
+							tipId="core/editor.settings"
+							isCollapsible
+							className="edit-post-header__settings-button-tip"
+						>
 							{ __( 'You’ll find more settings for your page and blocks in the sidebar. Click “Settings” to open it.' ) }
 						</DotTip>
 					</div>
