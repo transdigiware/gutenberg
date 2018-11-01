@@ -263,6 +263,10 @@ export function applySelection( selection, current ) {
 		range.setEnd( endContainer, endOffset );
 	}
 
+	if ( document.activeElement !== current ) {
+		current.focus();
+	}
+
 	windowSelection.removeAllRanges();
 	windowSelection.addRange( range );
 }
