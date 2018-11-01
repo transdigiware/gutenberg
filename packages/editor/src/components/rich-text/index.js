@@ -45,6 +45,7 @@ import {
 	replace,
 } from '@wordpress/rich-text';
 import { decodeEntities } from '@wordpress/html-entities';
+import deprecated from '@wordpress/deprecated';
 
 /**
  * Internal dependencies
@@ -304,6 +305,8 @@ export class RichText extends Component {
 		window.console.log( 'Received HTML:\n\n', html );
 		window.console.log( 'Received plain text:\n\n', plainText );
 
+		const record = this.createRecord();
+
 		// Only process file if no HTML is present.
 		// Note: a pasted file may have the URL as plain text.
 		if ( item && ! html ) {
@@ -324,19 +327,19 @@ export class RichText extends Component {
 			} else {
 				// Necessary to get the right range.
 				// Also done in the TinyMCE paste plugin.
-				this.props.setTimeout( () => this.onPasteBlocks( content ) );
+				this.props.setTimeout( () => this.onSplit( record, content ) );
 			}
 
 			return;
 		}
 
 		// There is a selection, check if a URL is pasted.
-		if ( ! this.editor.selection.isCollapsed() ) {
+		if ( ! isCollapsed( record ) ) {
 			const pastedText = ( html || plainText ).replace( /<[^>]+>/g, '' ).trim();
 
 			// A URL was pasted, turn the selection into a link
 			if ( isURL( pastedText ) ) {
-				this.onChange( applyFormat( this.getRecord(), {
+				this.onChange( applyFormat( record, {
 					type: 'a',
 					attributes: {
 						href: decodeEntities( pastedText ),
@@ -361,7 +364,6 @@ export class RichText extends Component {
 			mode = 'AUTO';
 		}
 
-		const record = this.getRecord();
 		const content = rawHandler( {
 			HTML: html,
 			plainText,
@@ -384,7 +386,7 @@ export class RichText extends Component {
 			if ( canReplace ) {
 				this.props.onReplace( content );
 			} else {
-				this.onPasteBlocks( content );
+				this.onSplit( record, content );
 			}
 		}
 	}
@@ -627,7 +629,7 @@ export class RichText extends Component {
 		}
 	}
 
-	onSplit( record ) {
+	onSplit( record, pastedBlocks = [] ) {
 		const { onReplace, onSplit, onSplitMiddle } = this.props;
 
 		if ( ! onReplace || ! onSplit ) {
@@ -635,17 +637,52 @@ export class RichText extends Component {
 		}
 
 		const [ before, after ] = split( record );
-		const blocks = [ onSplit( this.valueToFormat( before ) ) ];
+		const withDeprecatedArguments = onSplit(
+			this.valueToFormat( before ),
+			this.valueToFormat( after ),
+			pastedBlocks,
+		);
 
-		if ( onSplitMiddle ) {
+		if ( withDeprecatedArguments === undefined ) {
+			deprecated( 'wp.editor.RichText onSplit prop call with multiple arguments', {
+				version: '4.3',
+				alternative: 'onSplit prop with single argument to return a block',
+				plugin: 'Gutenberg',
+			} );
+			return;
+		}
+
+		const blocks = [];
+		const hasPastedBlocks = pastedBlocks.length > 0;
+
+		// Create a block with the content before the caret if there's no pasted
+		// blocks, or if there are pasted blocks and the value is not empty.
+		// We do not want a leading empty block on paste, but we do if split
+		// with e.g. the enter key.
+		if ( ! hasPastedBlocks || ! isEmpty( before ) ) {
+			// The first argument stays the same, so we can reuse this value.
+			blocks.push( withDeprecatedArguments );
+		}
+
+		if ( hasPastedBlocks ) {
+			blocks.push( ...pastedBlocks );
+		} else if ( onSplitMiddle ) {
 			blocks.push( onSplitMiddle() );
 		}
 
-		if ( ! onSplitMiddle || ! isEmpty( after ) ) {
+		// If there's pasted blocks, append a block with the content after the
+		// caret. Otherwise, do append and empty block if there is no
+		// `onSplitMiddle` prop, but if there is and the content is empty, the
+		// middle block is enough to set focus in.
+		if ( hasPastedBlocks || ! onSplitMiddle || ! isEmpty( after ) ) {
 			blocks.push( onSplit( this.valueToFormat( after ) ) );
 		}
 
-		onReplace( blocks, 1 );
+		// If there are pasted blocks, set the selection to the last one.
+		// Otherwise, set the selection to the second block.
+		const index = hasPastedBlocks ? blocks.length - 1 : 1;
+
+		onReplace( blocks, index );
 	}
 
 	/**
@@ -694,39 +731,6 @@ export class RichText extends Component {
 				container.scrollTop + delta,
 			);
 		}
-	}
-
-	/**
-	 * Splits the content at the location of the selection and inserts pasted
-	 * blocks.
-	 *
-	 * Replaces the content of the editor inside this element with the contents
-	 * before the selection. Sends the elements after the selection to the
-	 * `onSplit` handler.
-	 *
-	 * @param {Array}  pastedBlocks  The blocks to add after the split point.
-	 */
-	onPasteBlocks( pastedBlocks = [] ) {
-		const { onReplace, onSplit } = this.props;
-
-		if ( ! onReplace || ! onSplit ) {
-			return;
-		}
-
-		const [ before, after ] = split( this.createRecord() );
-		const blocks = [];
-
-		if ( ! isEmpty( before ) ) {
-			blocks.push( onSplit( this.valueToFormat( before ) ) );
-		}
-
-		blocks.push( ...pastedBlocks );
-
-		if ( ! isEmpty( after ) ) {
-			blocks.push( onSplit( this.valueToFormat( after ) ) );
-		}
-
-		onReplace( blocks, blocks.length - 1 );
 	}
 
 	onNodeChange( { parents } ) {
