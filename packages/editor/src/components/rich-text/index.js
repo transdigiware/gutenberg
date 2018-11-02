@@ -796,13 +796,13 @@ export class RichText extends Component {
 	componentDidUpdate( prevProps ) {
 		const { tagName, value, isSelected, annotations } = this.props;
 
-		const applyAnnotations = annotations !== prevProps.annotations;
+		const shouldApplyAnnotations = annotations !== prevProps.annotations;
 
 		if (
 			( tagName === prevProps.tagName &&
 			value !== prevProps.value &&
 			value !== this.savedContent ) ||
-			applyAnnotations
+			shouldApplyAnnotations
 		) {
 			// Handle deprecated `children` and `node` sources.
 			// The old way of passing a value with the `node` matcher required

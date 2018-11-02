@@ -4,9 +4,6 @@
 
 import { matchXPath } from '../xpath';
 
-// eslint-disable-next-line no-console
-console.log.mockRestore();
-
 describe( 'matchXPath', () => {
 	beforeAll( () => {
 		// Initialize the rich-text store.
