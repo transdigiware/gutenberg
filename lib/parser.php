@@ -260,7 +260,7 @@ class Gutenberg_PEG_Parser {
     private function peg_f3($blockName, $attrs) {
         return array(
           'blockName'   => $blockName,
-          'attrs'       => isset( $attrs ) ? $attrs : array(),
+          'attrs'       => empty( $attrs ) ? json_decode( '{}', false ) : $attrs,
           'innerBlocks' => array(),
           'innerHTML'   => '',
         );
@@ -270,7 +270,7 @@ class Gutenberg_PEG_Parser {
 
         return array(
           'blockName'    => $s['blockName'],
-          'attrs'        => $s['attrs'],
+          'attrs'        => empty( $s['attrs'] ) ? json_decode( '{}', false ) : $s['attrs'],
           'innerBlocks'  => $innerBlocks,
           'innerHTML'    => implode( '', $innerHTML ),
         );

@@ -1,14 +1,16 @@
 export const jsTester = ( parse ) => () => {
-	describe( 'parsing output structure', () => {
+	describe( 'output structure', () => {
+		test( 'output is an array', () => {
+			expect( parse( '' ) ).toEqual( expect.any( Array ) );
+			expect( parse( 'test' ) ).toEqual( expect.any( Array ) );
+			expect( parse( '<!-- wp:void /-->' ) ).toEqual( expect.any( Array ) );
+			expect( parse( '<!-- wp:block --><!-- wp:inner /--><!-- /wp:block -->' ) ).toEqual( expect.any( Array ) );
+			expect( parse( '<!-- wp:first /--><!-- wp:second /-->' ) ).toEqual( expect.any( Array ) );
+		} );
+
 		test( 'JSON attributes are JSON object', () => {
 			expect( parse( '<!-- wp:void /-->' )[ 0 ].attrs ).toEqual( {} );
 			expect( parse( '<!-- wp:void {"key": "value"} /-->' )[ 0 ].attrs ).toEqual( { key: 'value' } );
-		} );
-	} );
-
-	describe( 'basic parsing', () => {
-		test( 'parse() works properly', () => {
-			expect( parse( '<!-- wp:core/more --><!--more--><!-- /wp:core/more -->' ) ).toMatchSnapshot();
 		} );
 	} );
 
