@@ -13,6 +13,7 @@ import {
 	InnerBlocks,
 	getColorClassName,
 } from '@wordpress/editor';
+import { createBlock } from '@wordpress/blocks';
 
 /**
  * Internal dependencies
@@ -80,6 +81,67 @@ export const settings = {
 
 	supports: {
 		align: [ 'wide', 'full' ],
+	},
+
+	transforms: {
+		from: [
+			{
+				type: 'block',
+				blocks: [ 'core/image' ],
+				transform: ( { align, alt, url, id } ) => (
+					createBlock( 'core/media-text', {
+						align,
+						mediaAlt: alt,
+						mediaId: id,
+						mediaUrl: url,
+						mediaType: 'image',
+					} )
+				),
+			},
+			{
+				type: 'block',
+				blocks: [ 'core/video' ],
+				transform: ( { src, align, id } ) => (
+					createBlock( 'core/media-text', {
+						align,
+						mediaId: id,
+						mediaUrl: src,
+						mediaType: 'video',
+					} )
+				),
+			},
+		],
+		to: [
+			{
+				type: 'block',
+				blocks: [ 'core/image' ],
+				isMatch: ( { mediaType, mediaUrl } ) => {
+					return ! mediaUrl || mediaType === 'image';
+				},
+				transform: ( { align, mediaAlt, mediaId, mediaUrl } ) => {
+					return createBlock( 'core/image', {
+						align,
+						alt: mediaAlt,
+						id: mediaId,
+						url: mediaUrl,
+					} );
+				},
+			},
+			{
+				type: 'block',
+				blocks: [ 'core/video' ],
+				isMatch: ( { mediaType, mediaUrl } ) => {
+					return ! mediaUrl || mediaType === 'video';
+				},
+				transform: ( { align, mediaId, mediaUrl } ) => {
+					return createBlock( 'core/video', {
+						align,
+						id: mediaId,
+						src: mediaUrl,
+					} );
+				},
+			},
+		],
 	},
 
 	edit,
