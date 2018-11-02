@@ -190,10 +190,10 @@ Block
   / Block_Balanced
 
 Block_Void
-  = $("<!--" __ "wp:") blockName:Block_Name $(__) attrs:(a:Block_Attributes $(__) {
+  = "<!--" __ "wp:" blockName:Block_Name __ attrs:(a:Block_Attributes __ {
     /** <?php return $a; ?> **/
     return a;
-  })? $("/-->")
+  })? "/-->"
   {
     /** <?php
     return array(
@@ -213,7 +213,7 @@ Block_Void
   }
 
 Block_Balanced
-  = s:Block_Start children:($((!"<!" .)+) / Block / $((!Block !Block_End .)+))* e:Block_End
+  = s:Block_Start children:(Block / $(!Block_End .))* e:Block_End
   {
     /** <?php
     list( $innerHTML, $innerBlocks ) = peg_array_partition( $children, 'is_string' );
@@ -239,10 +239,10 @@ Block_Balanced
   }
 
 Block_Start
-  = $("<!--" __ "wp:") blockName:Block_Name $(__) attrs:(a:Block_Attributes __ {
+  = "<!--" __ "wp:" blockName:Block_Name __ attrs:(a:Block_Attributes __ {
     /** <?php return $a; ?> **/
     return a;
-  })? $("-->")
+  })? "-->"
   {
     /** <?php
     return array(
@@ -258,7 +258,7 @@ Block_Start
   }
 
 Block_End
-  = $("<!--" __ "/wp:") blockName:Block_Name $(__) "-->"
+  = "<!--" __ "/wp:" blockName:Block_Name __ "-->"
   {
     /** <?php
     return array(
@@ -276,7 +276,7 @@ Block_Name
   / Core_Block_Name
 
 Namespaced_Block_Name
-  = $( Block_Name_Part $("/") Block_Name_Part )
+  = $( Block_Name_Part "/" Block_Name_Part )
 
 Core_Block_Name
   = type:$( Block_Name_Part )
@@ -290,11 +290,11 @@ Block_Name_Part
 
 Block_Attributes
   "JSON-encoded attributes embedded in a block's opening comment"
-  = attrs:$("{" $(($((!"}" .)+) / $(!("}" __ """/"? "-->") .))*) "}")
+  = attrs:$("{" (!("}" __ """/"? "-->") .)* "}")
   {
     /** <?php return json_decode( $attrs, true ); ?> **/
     return maybeJSON( attrs );
   }
 
 __
-  = $([ \t\r\n]+)
+  = [ \t\r\n]+
