@@ -1,1 +1,0 @@
-/Users/dmsnell/PhpstormProjects/gutenberg-document-library/post-list.txt
