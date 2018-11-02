@@ -116,13 +116,13 @@ export class RichText extends Component {
 
 	componentDidMount() {
 		document.addEventListener( 'selectionchange', this.onSelectionChange );
-		window.addEventListener( 'mousemove', this.onCreateUndoLevel );
+		window.addEventListener( 'mousedown', this.onCreateUndoLevel );
 		window.addEventListener( 'touchstart', this.onCreateUndoLevel );
 	}
 
 	componentWillUnmount() {
 		document.removeEventListener( 'selectionchange', this.onSelectionChange );
-		window.removeEventListener( 'mousemove', this.onCreateUndoLevel );
+		window.removeEventListener( 'mousedown', this.onCreateUndoLevel );
 		window.removeEventListener( 'touchstart', this.onCreateUndoLevel );
 	}
 

@@ -18,7 +18,7 @@ describe( 'undo', () => {
 		await clickBlockAppender();
 
 		await page.keyboard.type( 'before move' );
-		await page.mouse.move( 200, 300, { steps: 10 } );
+		await page.mouse.down();
 		await page.keyboard.type( ' after move' );
 
 		expect( await getEditedPostContent() ).toMatchSnapshot();
