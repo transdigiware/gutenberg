@@ -8,6 +8,8 @@ import TextInput from "components/forms/form-text-input";
 
 const l = m => (console.log( m ), m);
 
+const AVG_KEY = '\u00b5sAvg';
+
 class ParserPicker extends Component {
 	state = {
 		parsers: {
@@ -55,7 +57,8 @@ class LibraryLoader extends Component {
 
 	componentDidMount() {
 		const xhr = new XMLHttpRequest();
-		xhr.open( 'GET', 'https://raw.githubusercontent.com/dmsnell/gutenberg-document-library/master/post-list.txt' );
+		// xhr.open( 'GET', 'https://raw.githubusercontent.com/dmsnell/gutenberg-document-library/master/post-list.txt' );
+		xhr.open( 'GET', 'http://localhost:3000/post-list.txt' );
 		xhr.onload = () => this.setState( {
 			documents: xhr.responseText.trim().split( '\n' ).reduce( ( o, url ) => ({ ...o, [ url ]: null }), {} )
 		}, this.loadDocs )
@@ -165,33 +168,37 @@ class OutputComparator extends Component {
 
 class Histogram extends Component {
 	render() {
-		const { data, prefix } = this.props;
-		const maxHeight = data.reduce( ( max, next ) => Math.max( max, next.value ), 0 );
+		const { data: { N, bins, mean, stddev }, prefix } = this.props;
+		const maxHeight = bins.reduce( ( max, next ) => Math.max( max, next.value ), 0 );
 
 		return (
-			<div style={{
-				width: '640px',
-				height: '240px',
-				backgroundColor: 'gray',
-				display: 'flex',
-				flexDirection: 'row',
-				alignItems: 'flex-end',
-			}}>
-				{data.map( ( bin, index ) => (
-					<div key={index} style={{
-						width: `${640 / data.length}px`,
-						height: `${Math.max( 1, 240 * (bin.value / maxHeight) )}px`,
-						backgroundColor: 'blue',
-						position: 'relative',
-					}}>
-						{ index % 3 === 0 && <label style={{
-							position: 'absolute',
-							bottom: '-20px',
+			<div>
+				<div style={{
+					width: '640px',
+					height: '240px',
+					backgroundColor: 'gray',
+					display: 'flex',
+					flexDirection: 'row',
+					alignItems: 'flex-end',
+					marginBottom: '20px',
+				}}>
+					{bins.map( ( bin, index ) => (
+						<div key={index} style={{
+							width: `${640 / bins.length}px`,
+							height: `${Math.max( 1, 240 * (bin.value / maxHeight) )}px`,
+							backgroundColor: 'blue',
+							position: 'relative',
 						}}>
-							{bin.label}
-						</label> }
-					</div>
-				) )}
+							{ index % 3 === 0 && <label style={{
+								position: 'absolute',
+								bottom: '-20px',
+							}}>
+								{bin.label}
+							</label> }
+						</div>
+					) )}
+				</div>
+				<div>(N = { N }, µ = { ( mean / 1000 ).toPrecision( 4 ) }, σ² = { ( stddev / 1000 ).toPrecision( 4 ) })</div>
 			</div>
 		);
 	}
@@ -259,21 +266,26 @@ class Runner extends Component {
 		const runData = runs[ `${parser}-${doc}` ];
 
 		if ( !runData ) {
-			return [];
+			return { N: 0, bins: [], mean: NaN, stddev: NaN };
 		}
 
-		const us = runData.map( data => data[ '\u00b5sAvg' ] );
+		const us = runData.map( data => data[ AVG_KEY ] );
 
 		// build a histogram
 		const binCount = 30;
 
-		return range( 0, binCount )
+		const mean = us.reduce( ( sum, next ) => sum + next, 0 ) / us.length;
+		const stddev = Math.sqrt( us.reduce( ( sum, next ) => sum + Math.pow( next - mean, 2 ), 0 ) / ( us.length - 1 ) );
+
+		const bins = range( 0, binCount )
 			.map( i => min + i * (max - min) / binCount )
 			.map( left => [ left, left + (max - min) / binCount ] )
 			.map( ( [ left, right ] ) => ({
 				label: `${( ( left + right ) / 2 / 1000 ).toPrecision( 4 )}`,
 				value: us.filter( time => time >= left && time < right ).length,
 			}) );
+
+		return { N: us.length, bins, mean, stddev };
 	}
 
 	render() {
