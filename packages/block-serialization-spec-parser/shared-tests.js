@@ -1,4 +1,11 @@
 export const jsTester = ( parse ) => () => {
+	describe( 'parsing output structure', () => {
+		test( 'JSON attributes are JSON object', () => {
+			expect( parse( '<!-- wp:void /-->' )[ 0 ].attrs ).toEqual( {} );
+			expect( parse( '<!-- wp:void {"key": "value"} /-->' )[ 0 ].attrs ).toEqual( { key: 'value' } );
+		} );
+	} );
+
 	describe( 'basic parsing', () => {
 		test( 'parse() works properly', () => {
 			expect( parse( '<!-- wp:core/more --><!--more--><!-- /wp:core/more -->' ) ).toMatchSnapshot();
