@@ -114,18 +114,6 @@ export class RichText extends Component {
 		this.lastHistoryValue = value;
 	}
 
-	componentDidMount() {
-		document.addEventListener( 'selectionchange', this.onSelectionChange );
-		window.addEventListener( 'mousedown', this.onCreateUndoLevel );
-		window.addEventListener( 'touchstart', this.onCreateUndoLevel );
-	}
-
-	componentWillUnmount() {
-		document.removeEventListener( 'selectionchange', this.onSelectionChange );
-		window.removeEventListener( 'mousedown', this.onCreateUndoLevel );
-		window.removeEventListener( 'touchstart', this.onCreateUndoLevel );
-	}
-
 	setRef( node ) {
 		this.editableRef = node;
 	}
@@ -749,6 +737,18 @@ export class RichText extends Component {
 			record.end = length;
 			this.applyRecord( record );
 		}
+
+		if ( isSelected && ! prevProps.isSelected ) {
+			document.addEventListener( 'selectionchange', this.onSelectionChange );
+			window.addEventListener( 'mousedown', this.onCreateUndoLevel );
+			window.addEventListener( 'touchstart', this.onCreateUndoLevel );
+		}
+
+		if ( ! isSelected && prevProps.isSelected ) {
+			document.removeEventListener( 'selectionchange', this.onSelectionChange );
+			window.removeEventListener( 'mousedown', this.onCreateUndoLevel );
+			window.removeEventListener( 'touchstart', this.onCreateUndoLevel );
+		}
 	}
 
 	formatToValue( value ) {
@@ -883,7 +883,7 @@ export class RichText extends Component {
 						</Fragment>
 					) }
 				</Autocomplete>
-				<RemoveBrowserShortcuts />
+				{ isSelected && <RemoveBrowserShortcuts /> }
 			</div>
 		);
 	}
