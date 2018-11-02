@@ -10,53 +10,61 @@ The component renders a series of buttons that allow the user to select predefin
 import { FontSizePicker } from '@wordpress/components';
 import { withState } from '@wordpress/compose';
 
+...
 const MyFontSizePicker = withState( {
 	fontSize: 16,
-} )( ( { fontSize, setState } ) => { 
+} )( ( { fontSize, setState } ) => {
 	const fontSizes = [
-		{ shortName: 'S', size: 12 },
-		{ shortName: 'M', size: 16 }
+		{ name: 'Small', size: 12 },
+		{ name: 'Big', size: 26 },
 	];
 	const fallbackFontSize = 16;
-	
-	return ( 
-		<FontSizePicker 
-			fontSizes={ fontSizes } 
+
+	return (
+		<FontSizePicker
+			fontSizes={ fontSizes }
 			value={ fontSize }
 			fallbackFontSize={ fallbackFontSize }
-			onChange={ fontSize => setState( { fontSize } ) } 
+			onChange={ ( newFontSize ) => {
+				setState( { fontSize: newFontSize } );
+			} }
 		/>
-	); 
+	);
 } );
+
+...
+
+<MyFontSizePicker />
 ```
 
 ## Props
 
 The component accepts the following props:
 
+### disableCustomFontSizes
+
+If true it will not be possible to choose a custom fontSize, the user will be forced to pick one of the sizes passed in fontSizes.
+
+- Type: `Boolean`
+- Required: no
+- Default: `false`
+
+### fallbackFontSize
+
+In no value exists this prop contains the font size picker slider starting position. Only relevant if withSlider is true.
+
+- Type: `Number`
+- Required: No
+
 ### fontSizes
 
-An array of font size objects. The object should contain properties size, name, shortName.
-The property "size" contains a number with the font size value. The "shortName" property includes a small label used in the buttons. Property "name" is used as the label when shortName is not provided.
+An array of font size objects. The object should contain properties size and name.
+The property "size" contains a number with the font size value. The "name" property includes a label for that fontSize e.g: "Small".
 
 - Type: `Array`
 - Required: No
 
-### fallbackFontSize
-
-In no value exists this prop contains the font size picker slider starting position.
-
-- Type: `Number`
-- Required: No
-
-### value
-
-The current font size value. If a button value matches the font size value that button is pressed. RangeControl is rendered with this value.
-
-- Type: `Number`
-- Required: No
-
-## onChange
+### onChange
 
 A function that receives the new font size value.
 If onChange is called without any parameter, it should reset the value, attending to what reset means in that context, e.g., set the font size to undefined or set the font size a starting value.
@@ -64,3 +72,17 @@ If onChange is called without any parameter, it should reset the value, attendin
 - Type: `function`
 - Required: Yes
 
+### value
+
+The current font size value.
+
+- Type: `Number`
+- Required: No
+
+### withSlider
+
+If true the UI will contain a slider. If false no slider will be present.
+
+- Type: `Boolean`
+- Required: no
+- Default: `false`
