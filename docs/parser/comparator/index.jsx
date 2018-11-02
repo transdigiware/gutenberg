@@ -57,8 +57,7 @@ class LibraryLoader extends Component {
 
 	componentDidMount() {
 		const xhr = new XMLHttpRequest();
-		// xhr.open( 'GET', 'https://raw.githubusercontent.com/dmsnell/gutenberg-document-library/master/post-list.txt' );
-		xhr.open( 'GET', 'http://localhost:3000/post-list.txt' );
+		xhr.open( 'GET', 'https://raw.githubusercontent.com/dmsnell/gutenberg-document-library/master/post-list.txt' );
 		xhr.onload = () => this.setState( {
 			documents: xhr.responseText.trim().split( '\n' ).reduce( ( o, url ) => ({ ...o, [ url ]: null }), {} )
 		}, this.loadDocs )
