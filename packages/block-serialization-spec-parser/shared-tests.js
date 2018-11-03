@@ -1,7 +1,7 @@
 export const jsTester = ( parse ) => () => {
 	describe( 'PHP version', () => {
 		if ( 'test' === process.env.NODE_ENV ) {
-			expect( require( 'child_process' ).execSync( 'php -v', 'utf8' ) ).toEqual( 'report!' );
+			expect( require( 'child_process' ).execSync( 'php -v', { encoding: 'utf8' } ) ).toEqual( 'report!' );
 		}
 	} );
 
