@@ -183,7 +183,7 @@ class WP_Block_Parser {
 		$this->offset      = 0;
 		$this->output      = array();
 		$this->stack       = array();
-		$this->empty_attrs = json_decode( '{}', version_compare( PHP_VERSION, '7.0.0' ) > 0  );
+		$this->empty_attrs = json_decode( '{}', version_compare( PHP_VERSION, '7.0.0' ) >= 0  );
 
 		do {
 			// twiddle our thumbs
