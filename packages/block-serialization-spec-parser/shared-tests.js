@@ -18,7 +18,11 @@ export const jsTester = ( parse ) => () => {
 		test( 'JSON attributes are key/value object', () => {
 			expect( parse( 'freeform has empty attrs' )[ 0 ] ).toHaveProperty( 'attrs', {} );
 			expect( parse( '<!-- wp:void /-->' )[ 0 ] ).toHaveProperty( 'attrs', {} );
+			expect( parse( '<!-- wp:void {} /-->' )[ 0 ] ).toHaveProperty( 'attrs', {} );
 			expect( parse( '<!-- wp:void {"key": "value"} /-->' )[ 0 ] ).toHaveProperty( 'attrs', { key: 'value' } );
+			expect( parse( '<!-- wp:block --><!-- /wp:block -->' )[ 0 ] ).toHaveProperty( 'attrs', {} );
+			expect( parse( '<!-- wp:block {} --><!-- /wp:block -->' )[ 0 ] ).toHaveProperty( 'attrs', {} );
+			expect( parse( '<!-- wp:block {"key": "value"} --><!-- /wp:block -->' )[ 0 ] ).toHaveProperty( 'attrs', { key: 'value' } );
 		} );
 
 		test( 'innerBlocks is a list', () => {
