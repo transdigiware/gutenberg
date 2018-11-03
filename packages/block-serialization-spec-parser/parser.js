@@ -166,7 +166,7 @@
             /** <?php
             return array(
               'blockName'   => $blockName,
-              'attrs'       => isset( $attrs ) ? $attrs : array(),
+              'attrs'       => empty( $attrs ) ? json_decode( '{}', false ) : $attrs,
               'innerBlocks' => array(),
               'innerHTML'   => '',
             );
@@ -184,10 +184,10 @@
             list( $innerHTML, $innerBlocks ) = peg_array_partition( $children, 'is_string' );
 
             return array(
-              'blockName'    => $s['blockName'],
-              'attrs'        => $s['attrs'],
-              'innerBlocks'  => $innerBlocks,
-              'innerHTML'    => implode( '', $innerHTML ),
+              'blockName'   => $s['blockName'],
+              'attrs'       => empty( $s['attrs'] ) ? json_decode( '{}', false ) : $s['attrs'],
+              'innerBlocks' => $innerBlocks,
+              'innerHTML'   => implode( '', $innerHTML ),
             );
             ?> **/
 
@@ -1500,7 +1500,7 @@
             if ( ! empty( $pre ) ) {
                 $blocks[] = array(
                     'blockName' => null,
-                    'attrs' => array(),
+                    'attrs' => json_decode( '{}', false ),
                     'innerBlocks' => array(),
                     'innerHTML' => $pre
                 );
@@ -1514,8 +1514,8 @@
                 if ( ! empty( $html ) ) {
                     $blocks[] = array(
                         'blockName' => null,
-                        'attrs' => array(),
-                        'innerBlocks' => array(),
+                        'attrs' => json_decode( '{}', false ),
+                        'innerBlock' => array(),
                         'innerHTML' => $html
                     );
                 }
@@ -1524,7 +1524,7 @@
             if ( ! empty( $post ) ) {
                 $blocks[] = array(
                     'blockName' => null,
-                    'attrs' => array(),
+                    'attrs' => json_decode( '{}', false ),
                     'innerBlocks' => array(),
                     'innerHTML' => $post
                 );
