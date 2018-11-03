@@ -1,10 +1,4 @@
 export const jsTester = ( parse ) => () => {
-	describe( 'PHP version', () => {
-		if ( 'test' === process.env.NODE_ENV ) {
-			expect( require( 'child_process' ).execSync( 'php -v', { encoding: 'utf8' } ) ).toEqual( 'report!' );
-		}
-	} );
-
 	describe( 'output structure', () => {
 		test( 'output is an array', () => {
 			expect( parse( '' ) ).toEqual( expect.any( Array ) );
