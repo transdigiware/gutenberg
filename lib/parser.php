@@ -260,7 +260,7 @@ class Gutenberg_PEG_Parser {
     private function peg_f3($blockName, $attrs) {
         return array(
           'blockName'   => $blockName,
-          'attrs'       => empty( $attrs ) ? json_decode( '{}', false ) : $attrs,
+          'attrs'       => empty( $attrs ) ? peg_empty_attrs() : $attrs,
           'innerBlocks' => array(),
           'innerHTML'   => '',
         );
@@ -270,7 +270,7 @@ class Gutenberg_PEG_Parser {
 
         return array(
           'blockName'   => $s['blockName'],
-          'attrs'       => empty( $s['attrs'] ) ? json_decode( '{}', false ) : $s['attrs'],
+          'attrs'       => empty( $s['attrs'] ) ? peg_empty_attrs() : $s['attrs'],
           'innerBlocks' => $innerBlocks,
           'innerHTML'   => implode( '', $innerHTML ),
         );
@@ -1440,6 +1440,19 @@ class Gutenberg_PEG_Parser {
     // The `maybeJSON` function is not needed in PHP because its return semantics
     // are the same as `json_decode`
 
+    if ( ! function_exists( 'peg_empty_attrs' ) ) {
+        function peg_empty_attrs() {
+            static $empty_attrs = null;
+
+            if ( null === $empty_attrs ) {
+                $force_assoc = version_compare( PHP_VERSION, '7.0.0' ) < 0;
+                $empty_attrs = json_decode( '{}', $force_assoc );
+            }
+
+            return $empty_attrs;
+        }
+    }
+
     // array arguments are backwards because of PHP
     if ( ! function_exists( 'peg_array_partition' ) ) {
         function peg_array_partition( $array, $predicate ) {
@@ -1463,7 +1476,7 @@ class Gutenberg_PEG_Parser {
             if ( ! empty( $pre ) ) {
                 $blocks[] = array(
                     'blockName' => null,
-                    'attrs' => json_decode( '{}', false ),
+                    'attrs' => peg_empty_attrs(),
                     'innerBlocks' => array(),
                     'innerHTML' => $pre
                 );
@@ -1477,7 +1490,7 @@ class Gutenberg_PEG_Parser {
                 if ( ! empty( $html ) ) {
                     $blocks[] = array(
                         'blockName' => null,
-                        'attrs' => json_decode( '{}', false ),
+                        'attrs' => peg_empty_attrs(),
                         'innerBlocks' => array(),
                         'innerHTML' => $html
                     );
@@ -1487,7 +1500,7 @@ class Gutenberg_PEG_Parser {
             if ( ! empty( $post ) ) {
                 $blocks[] = array(
                     'blockName' => null,
-                    'attrs' => json_decode( '{}', false ),
+                    'attrs' => peg_empty_attrs(),
                     'innerBlocks' => array(),
                     'innerHTML' => $post
                 );
