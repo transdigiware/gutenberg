@@ -73,7 +73,7 @@ if ( ! function_exists( 'peg_join_blocks' ) ) {
         if ( ! empty( $pre ) ) {
             $blocks[] = array(
                 'blockName' => null,
-                'attrs' => array(),
+                'attrs' => json_decode( '{}', false ),
                 'innerBlocks' => array(),
                 'innerHTML' => $pre
             );
@@ -87,8 +87,8 @@ if ( ! function_exists( 'peg_join_blocks' ) ) {
             if ( ! empty( $html ) ) {
                 $blocks[] = array(
                     'blockName' => null,
-                    'attrs' => array(),
-                    'innerBlocks' => array(),
+                    'attrs' => json_decode( '{}', false ),
+                    'innerBlock' => array(),
                     'innerHTML' => $html
                 );
             }
@@ -97,7 +97,7 @@ if ( ! function_exists( 'peg_join_blocks' ) ) {
         if ( ! empty( $post ) ) {
             $blocks[] = array(
                 'blockName' => null,
-                'attrs' => array(),
+                'attrs' => json_decode( '{}', false ),
                 'innerBlocks' => array(),
                 'innerHTML' => $post
             );

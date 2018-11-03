@@ -406,7 +406,7 @@ class WP_Block_Parser {
 	 * @return WP_Block_Parser_Block freeform block object
 	 */
 	static function freeform( $innerHTML ) {
-		return new WP_Block_Parser_Block( null, array(), array(), $innerHTML );
+		return new WP_Block_Parser_Block( null, json_decode( '{}', false ), array(), $innerHTML );
 	}
 
 	/**

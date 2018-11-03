@@ -8,9 +8,38 @@ export const jsTester = ( parse ) => () => {
 			expect( parse( '<!-- wp:first /--><!-- wp:second /-->' ) ).toEqual( expect.any( Array ) );
 		} );
 
-		test( 'JSON attributes are JSON object', () => {
-			expect( parse( '<!-- wp:void /-->' )[ 0 ].attrs ).toEqual( {} );
-			expect( parse( '<!-- wp:void {"key": "value"} /-->' )[ 0 ].attrs ).toEqual( { key: 'value' } );
+		test( 'blockName is namespaced string (except freeform)', () => {
+			expect( parse( 'freeform has null name' )[ 0 ] ).toHaveProperty( 'blockName', null );
+			expect( parse( '<!-- wp:more /-->' )[ 0 ] ).toHaveProperty( 'blockName', 'core/more' );
+			expect( parse( '<!-- wp:core/more /-->' )[ 0 ] ).toHaveProperty( 'blockName', 'core/more' );
+			expect( parse( '<!-- wp:my/more /-->' )[ 0 ] ).toHaveProperty( 'blockName', 'my/more' );
+		} );
+
+		test( 'JSON attributes are key/value object', () => {
+			expect( parse( 'freeform has empty attrs' )[ 0 ] ).toHaveProperty( 'attrs', {} );
+			expect( parse( '<!-- wp:void /-->' )[ 0 ] ).toHaveProperty( 'attrs', {} );
+			expect( parse( '<!-- wp:void {"key": "value"} /-->' )[ 0 ] ).toHaveProperty( 'attrs', { key: 'value' } );
+		} );
+
+		test( 'innerBlocks is a list', () => {
+			expect( parse( 'freeform has empty innerBlocks' )[ 0 ] ).toHaveProperty( 'innerBlocks', [] );
+			expect( parse( '<!-- wp:void /-->' )[ 0 ] ).toHaveProperty( 'innerBlocks', [] );
+			expect( parse( '<!-- wp:block --><!-- /wp:block -->' )[ 0 ] ).toHaveProperty( 'innerBlocks', [] );
+
+			const withInner = parse( '<!-- wp:block --><!-- wp:inner /--><!-- /wp:block -->' )[ 0 ];
+			expect( withInner ).toHaveProperty( 'innerBlocks', expect.any( Array ) );
+			expect( withInner.innerBlocks ).toHaveLength( 1 );
+
+			const withTwoInner = parse( '<!-- wp:block -->a<!-- wp:first /-->b<!-- wp:second /-->c<!-- /wp:block -->' )[ 0 ];
+			expect( withTwoInner ).toHaveProperty( 'innerBlocks', expect.any( Array ) );
+			expect( withTwoInner.innerBlocks ).toHaveLength( 2 );
+		} );
+
+		test( 'innerHTML is a string', () => {
+			expect( parse( 'test' )[ 0 ] ).toHaveProperty( 'innerHTML', expect.any( String ) );
+			expect( parse( '<!-- wp:test /-->' )[ 0 ] ).toHaveProperty( 'innerHTML', expect.any( String ) );
+			expect( parse( '<!-- wp:test --><!-- /wp:test -->' )[ 0 ] ).toHaveProperty( 'innerHTML', expect.any( String ) );
+			expect( parse( '<!-- wp:test -->test<!-- /wp:test -->' )[ 0 ] ).toHaveProperty( 'innerHTML', expect.any( String ) );
 		} );
 	} );
 
