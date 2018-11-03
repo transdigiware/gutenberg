@@ -1515,7 +1515,7 @@
                     $blocks[] = array(
                         'blockName' => null,
                         'attrs' => json_decode( '{}', false ),
-                        'innerBlock' => array(),
+                        'innerBlocks' => array(),
                         'innerHTML' => $html
                     );
                 }

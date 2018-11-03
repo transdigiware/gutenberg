@@ -88,7 +88,7 @@ if ( ! function_exists( 'peg_join_blocks' ) ) {
                 $blocks[] = array(
                     'blockName' => null,
                     'attrs' => json_decode( '{}', false ),
-                    'innerBlock' => array(),
+                    'innerBlocks' => array(),
                     'innerHTML' => $html
                 );
             }
