@@ -1,6 +1,8 @@
 export const jsTester = ( parse ) => () => {
 	describe( 'PHP version', () => {
-		expect( require( 'child_process' ).execSync( 'php -v', 'utf8' ) ).toEqual( 'report!' );
+		if ( 'test' === process.env.NODE_ENV ) {
+			expect( require( 'child_process' ).execSync( 'php -v', 'utf8' ) ).toEqual( 'report!' );
+		}
 	} );
 
 	describe( 'output structure', () => {
