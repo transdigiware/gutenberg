@@ -1,4 +1,8 @@
 export const jsTester = ( parse ) => () => {
+	describe( 'PHP version', () => {
+		expect( require( 'child_process' ).execSync( 'php -v', 'utf8' ) ).toEqual( 'report!' );
+	} );
+
 	describe( 'output structure', () => {
 		test( 'output is an array', () => {
 			expect( parse( '' ) ).toEqual( expect.any( Array ) );
