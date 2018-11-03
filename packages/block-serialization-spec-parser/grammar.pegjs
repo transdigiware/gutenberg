@@ -59,7 +59,6 @@ if ( ! function_exists( 'peg_empty_attrs' ) ) {
             if ( json_encode( $empty_attrs ) !== '{}' ) {
                 $empty_attrs = json_decode( '{}', false );
             }
-           	$this->empty_attrs = $empty_attrs;
         }
 
         return $empty_attrs;
