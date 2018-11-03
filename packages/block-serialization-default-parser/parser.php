@@ -183,7 +183,7 @@ class WP_Block_Parser {
 		$this->offset      = 0;
 		$this->output      = array();
 		$this->stack       = array();
-		$this->empty_attrs = array_merge( array( 0 => null ), array( 0 => null ) );
+		$this->empty_attrs = array_diff( array( 0 => null ), array( 0 => null ) );
 
 		do {
 			// twiddle our thumbs
