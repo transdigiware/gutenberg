@@ -179,16 +179,11 @@ class WP_Block_Parser {
 	 * @return WP_Block_Parser_Block[]
 	 */
 	function parse( $document ) {
-		$this->document = $document;
-		$this->offset   = 0;
-		$this->output   = array();
-		$this->stack    = array();
-
-		$empty_attrs = json_decode( '{}', true );
-		if ( json_encode( $empty_attrs ) !== '{}' ) {
-			$empty_attrs = json_decode( '{}', false );
-		}
-		$this->empty_attrs = $empty_attrs;
+		$this->document    = $document;
+		$this->offset      = 0;
+		$this->output      = array();
+		$this->stack       = array();
+		$this->empty_attrs = array_merge( array( 0 => null ), array( 0 => null ) );
 
 		do {
 			// twiddle our thumbs

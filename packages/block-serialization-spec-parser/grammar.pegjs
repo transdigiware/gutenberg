@@ -55,10 +55,7 @@ if ( ! function_exists( 'peg_empty_attrs' ) ) {
         static $empty_attrs = null;
 
         if ( null === $empty_attrs ) {
-            $empty_attrs = json_decode( '{}', true );
-            if ( json_encode( $empty_attrs ) !== '{}' ) {
-                $empty_attrs = json_decode( '{}', false );
-            }
+            $empty_attrs = array_merge( array( '0' => null ), array( '0' => null ) );
         }
 
         return $empty_attrs;
