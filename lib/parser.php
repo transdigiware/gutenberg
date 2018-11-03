@@ -1445,8 +1445,11 @@ class Gutenberg_PEG_Parser {
             static $empty_attrs = null;
 
             if ( null === $empty_attrs ) {
-                $force_assoc = version_compare( PHP_VERSION, '7.0.0' ) < 0;
-                $empty_attrs = json_decode( '{}', $force_assoc );
+                $empty_attrs = json_decode( '{}', true );
+                if ( json_encode( $empty_attrs ) !== '{}' ) {
+                    $empty_attrs = json_decode( '{}', false );
+                }
+               	$this->empty_attrs = $empty_attrs;
             }
 
             return $empty_attrs;
