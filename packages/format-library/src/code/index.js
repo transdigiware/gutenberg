@@ -11,7 +11,7 @@ export const code = {
 	name,
 	title: __( 'Code' ),
 	tagName: 'code',
-	canHandleBareElement: true,
+	className: null,
 	edit( { value, onChange, Shortcut } ) {
 		const onToggle = () => onChange( toggleFormat( value, { type: name } ) );
 

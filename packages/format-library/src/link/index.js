@@ -23,7 +23,7 @@ export const link = {
 	name,
 	title: __( 'Link' ),
 	tagName: 'a',
-	canHandleBareElement: true,
+	className: null,
 	attributes: {
 		url: 'href',
 		target: 'target',

@@ -11,7 +11,7 @@ export const strikethrough = {
 	name,
 	title: __( 'Strikethrough' ),
 	tagName: 'del',
-	canHandleBareElement: true,
+	className: null,
 	edit( { isActive, value, onChange, ToolbarButton, Shortcut } ) {
 		const onToggle = () => onChange( toggleFormat( value, { type: name } ) );
 

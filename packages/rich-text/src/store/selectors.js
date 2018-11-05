@@ -40,7 +40,25 @@ export function getFormatType( state, name ) {
  * @return {?Object} Format type.
  */
 export function getFormatTypeForBareElement( state, bareElementTagName ) {
-	return find( getFormatTypes( state ), ( { tagName, canHandleBareElement } ) => {
-		return canHandleBareElement && bareElementTagName === tagName;
+	return find( getFormatTypes( state ), ( { tagName } ) => {
+		return bareElementTagName === tagName;
+	} );
+}
+
+/**
+ * Gets the format type, if any, that can handle an element, given its classes.
+ *
+ * @param {Object} state            Data state.
+ * @param {string} elementClassName The classes of the element to find a format
+ *                                  type for.
+ * @return {?Object} Format type.
+ */
+export function getFormatTypeForClassName( state, elementClassName ) {
+	return find( getFormatTypes( state ), ( { className } ) => {
+		if ( className === null ) {
+			return false;
+		}
+
+		return ` ${ elementClassName } `.indexOf( ` ${ className } ` ) >= 0;
 	} );
 }

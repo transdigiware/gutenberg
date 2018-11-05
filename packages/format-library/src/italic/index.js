@@ -10,8 +10,8 @@ const name = 'core/italic';
 export const italic = {
 	name,
 	title: __( 'Italic' ),
-	tagName: 'img',
-	canHandleBareElement: true,
+	tagName: 'em',
+	className: null,
 	edit( { isActive, value, onChange, ToolbarButton, Shortcut } ) {
 		const onToggle = () => onChange( toggleFormat( value, { type: name } ) );
 

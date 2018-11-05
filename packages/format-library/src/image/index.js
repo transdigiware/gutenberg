@@ -17,7 +17,7 @@ export const image = {
 	keywords: [ __( 'photo' ), __( 'media' ) ],
 	object: true,
 	tagName: 'img',
-	canHandleBareElement: true,
+	className: null,
 	attributes: {
 		className: 'class',
 		style: 'style',

@@ -11,7 +11,7 @@ export const bold = {
 	name,
 	title: __( 'Bold' ),
 	tagName: 'strong',
-	canHandleBareElement: true,
+	className: null,
 	edit( { isActive, value, onChange, ToolbarButton, Shortcut } ) {
 		const onToggle = () => onChange( toggleFormat( value, { type: name } ) );
 

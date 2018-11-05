@@ -18,10 +18,6 @@ function fromFormat( { type, attributes, object } ) {
 
 	const elementAttributes = {};
 
-	if ( ! formatType.canHandleBareElement ) {
-		elementAttributes[ 'data-format-type' ] = formatType.name;
-	}
-
 	for ( const name in attributes ) {
 		const key = formatType.attributes[ name ];
 
@@ -29,6 +25,14 @@ function fromFormat( { type, attributes, object } ) {
 			elementAttributes[ key ] = attributes[ name ];
 		} else {
 			elementAttributes[ name ] = attributes[ name ];
+		}
+	}
+
+	if ( formatType.className ) {
+		if ( elementAttributes.class ) {
+			elementAttributes.class = `${ formatType.className } ${ elementAttributes.class }`;
+		} else {
+			elementAttributes.class = formatType.className;
 		}
 	}
 

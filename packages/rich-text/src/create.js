@@ -36,11 +36,15 @@ function simpleFindKey( object, value ) {
 function toFormat( { type, attributes } ) {
 	let formatType;
 
-	if ( attributes ) {
-		const dataFormatType = attributes[ 'data-format-type' ];
+	if ( attributes && attributes.class ) {
+		formatType = select( 'core/rich-text' ).getFormatTypeForClassName( attributes.class );
 
-		if ( dataFormatType ) {
-			formatType = select( 'core/rich-text' ).getFormatType( dataFormatType );
+		if ( formatType ) {
+			attributes.class = ` ${ attributes.class } `.replace( ` ${ formatType.className } `, ' ' ).trim();
+
+			if ( ! attributes.class ) {
+				delete attributes.class;
+			}
 		}
 	}
 
