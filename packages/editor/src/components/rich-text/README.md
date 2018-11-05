@@ -68,17 +68,11 @@ An annotation has the following shape:
 	// The source of the annotation, will be used for the HTML class.
 	"source": "annotations-tester",
 	
-	// The starting XPath for the annotation, this is relative to the `RichText` containing element. Must be continious from the container element. Matched element must be a text node.
-	"startXPath": "text()[1]",
+	// The starting offset within the rich-text structure.
+	"start": 106,
 	
-	// The starting offset within the element matched by the XPath.
-	"startOffset": 106,
-	
-	// The ending XPath for the annotation.
-	"endXPath": "strong[1]/text()[1]",
-	
-	// The ending offset within the element matched by the XPath.
-	"endOffset": 75
+	// The ending offset within the rich-text structure.
+	"end": 75
 }
 ```
 

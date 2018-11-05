@@ -8,6 +8,7 @@ import {
 	isNil,
 	isEqual,
 	omit,
+	isNumber,
 } from 'lodash';
 import memize from 'memize';
 
@@ -42,7 +43,6 @@ import {
 	getSelectionEnd,
 	remove,
 	isCollapsed,
-	matchXPath,
 	removeFormat,
 } from '@wordpress/rich-text';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -750,37 +750,22 @@ export class RichText extends Component {
 	 * @param {Array} annotations The annotation to apply.
 	 * @return {Object} A record with the annotations applied.
 	 */
-	applyAnnotations( record, annotations ) {
+	applyAnnotations( record, annotations = [] ) {
 		annotations
-			.map( ( annotation ) => {
-				let startPos = matchXPath( record, annotation.startXPath );
-				let endPos = matchXPath( record, annotation.endXPath );
-
-				if ( startPos !== false ) {
-					startPos += annotation.startOffset;
-				}
-
-				if ( endPos !== false ) {
-					endPos += annotation.endOffset;
-				}
-
-				if (
-					startPos !== false &&
-					endPos !== false &&
-					startPos <= endPos &&
-					startPos <= record.text.length &&
-					endPos <= record.text.length
-				) {
-					return {
-						start: startPos,
-						end: endPos,
-						className: 'annotation-text annotation-text-' + annotation.source,
-					};
-				}
-
-				return false;
+			.filter( ( annotation ) => {
+				return isNumber( annotation.start ) &&
+					isNumber( annotation.end ) &&
+					annotation.start <= annotation.end &&
+					annotation.start <= record.text.length &&
+					annotation.end <= record.text.length;
 			} )
-			.filter( Boolean )
+			.map( ( annotation ) => {
+				return {
+					start: annotation.start,
+					end: annotation.end,
+					className: 'annotation-text annotation-text-' + annotation.source,
+				};
+			} )
 			.forEach( ( { start, end, className } ) => {
 				record = applyFormat(
 					record,

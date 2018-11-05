@@ -788,17 +788,14 @@ export function unlockPostSaving( lockName ) {
  * annotation. The `source` is the source of the annotation, this will be used
  * to identity groups of annotations.
  *
- * The `startXpath`, `startOffset`, `endXPath` and `endOffset` arguments are
- * only relevant when the annotation is not a block annotation.
+ * The `range` property is only relevant if the selector is 'range'.
  *
  * @param {Object} annotation         The annotation to add.
  * @param {string} blockClientId      The blockClientId to add the annotation to.
  * @param {string} richTextIdentifier Identifier for the RichText instance the annotation applies to.
- * @param {Object} range              The range at which to apply this annotaiton.
- * @param {string} range.startXPath   The XPath where the annotation should start.
- * @param {number} range.startOffset  The offset where the annotation should start.
- * @param {string} range.endXPath     The XPath where the annotation should end.
- * @param {number} range.endOffset    The offset where the annotation should end.
+ * @param {Object} range              The range at which to apply this annotation.
+ * @param {number} range.start        The offset where the annotation should start.
+ * @param {number} range.end          The offset where the annotation should end.
  * @param {string} [selector="range"] The way to apply this annotation.
  * @param {string} [source="default"] The source that added the annotation.
  * @param {string} [id=uuid()]        The ID the annotation should have.

@@ -27,4 +27,3 @@ export { toHTMLString } from './to-html-string';
 export { toggleFormat } from './toggle-format';
 export { LINE_SEPARATOR } from './special-characters';
 export { unregisterFormatType } from './unregister-format-type';
-export { matchXPath } from './xpath';

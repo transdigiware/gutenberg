@@ -2266,8 +2266,9 @@ describe( 'state', () => {
 				type: 'ANNOTATION_ADD',
 				id: 'annotationId',
 				blockClientId: 'blockClientId',
+				richTextIdentifier: 'identifier',
 				source: 'default',
-				isBlockAnnotation: true,
+				selector: 'block',
 			} );
 
 			expect( state ).toEqual( {
@@ -2275,12 +2276,9 @@ describe( 'state', () => {
 					{
 						id: 'annotationId',
 						blockClientId: 'blockClientId',
+						richTextIdentifier: 'identifier',
 						source: 'default',
-						isBlockAnnotation: true,
-						startXPath: undefined,
-						startOffset: undefined,
-						endXPath: undefined,
-						endOffset: undefined,
+						selector: 'block',
 					},
 				],
 				byBlockClientId: {
@@ -2295,12 +2293,9 @@ describe( 'state', () => {
 					{
 						id: 'annotationId',
 						blockClientId: 'blockClientId',
+						richTextIdentifier: 'identifier',
 						source: 'default',
-						isBlockAnnotation: true,
-						startXPath: undefined,
-						startOffset: undefined,
-						endXPath: undefined,
-						endOffset: undefined,
+						selector: 'block',
 					},
 				],
 				byBlockClientId: {
@@ -2318,22 +2313,16 @@ describe( 'state', () => {
 			const annotation1 = {
 				id: 'annotationId',
 				blockClientId: 'blockClientId',
+				richTextIdentifier: 'identifier',
 				source: 'default',
-				isBlockAnnotation: true,
-				startXPath: undefined,
-				startOffset: undefined,
-				endXPath: undefined,
-				endOffset: undefined,
+				selector: 'block',
 			};
 			const annotation2 = {
 				id: 'annotationId2',
 				blockClientId: 'blockClientId2',
+				richTextIdentifier: 'identifier2',
 				source: 'other-source',
-				isBlockAnnotation: true,
-				startXPath: undefined,
-				startOffset: undefined,
-				endXPath: undefined,
-				endOffset: undefined,
+				selector: 'block',
 			};
 			const state = annotations( {
 				all: [
@@ -2354,6 +2343,40 @@ describe( 'state', () => {
 				byBlockClientId: {
 					blockClientId: [],
 					blockClientId2: [ 'annotationId2' ],
+				},
+			} );
+		} );
+
+		it( 'allows a range selector', () => {
+			const state = annotations( undefined, {
+				type: 'ANNOTATION_ADD',
+				id: 'annotationId',
+				blockClientId: 'blockClientId',
+				richTextIdentifier: 'identifier',
+				source: 'default',
+				selector: 'range',
+				range: {
+					start: 0,
+					end: 100,
+				},
+			} );
+
+			expect( state ).toEqual( {
+				all: [
+					{
+						id: 'annotationId',
+						blockClientId: 'blockClientId',
+						richTextIdentifier: 'identifier',
+						source: 'default',
+						selector: 'range',
+						range: {
+							start: 0,
+							end: 100,
+						},
+					},
+				],
+				byBlockClientId: {
+					blockClientId: [ 'annotationId' ],
 				},
 			} );
 		} );

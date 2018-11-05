@@ -12,29 +12,19 @@ wp.data.dispatch( 'core/editor' ).addAnnotation( {
 	blockClientId: wp.data.select( 'core/editor' ).getBlockOrder()[0],
 	richTextIdentifier: "content",
 	range: {
-		startXPath: "text()[1]",
-		startOffset: 50,
-		endXPath: "text()[1]",
-		endOffset: 100,
+		start: 50,
+		end: 100,
 	},
 } );
 ```
 
-If you add some bold text to that same block, you can annotate inside the bold text by changing the XPath:
+The start and the end of the range should be calculated based only on the text of the relevant `RichText`. For example, in the following HTML position 0 will refer to the position before the capital S:
 
-```js
-wp.data.dispatch( 'core/editor' ).addAnnotation( {
-	source: "my-annotations-plugin",
-	blockClientId: wp.data.select( 'core/editor' ).getBlockOrder()[0],
-	richTextIdentifier: "content",
-	range: {
-		startXPath: "text()[1]",
-		startOffset: 5,
-		endXPath: "strong[1]/text()[1]",
-		endOffset: 3,
-	},
-} );
+```html
+<strong>Strong text</strong>
 ```
+
+To help with determining the correct positions, the `wp.richText.create` method can be used. This will split a piece of HTML into text and formats.
 
 All available properties can be found in the API documentation of the `addAnnotation` action. 
 
@@ -60,12 +50,4 @@ This doesn't provide any styling out of the box, so you have to provide some CSS
 
 ## Text annotation
 
-The text annotation is controled by the `startXPath`, `startOffset`, `endXPath` and `endOffset` properties. Because HTML is a tree based structure, simple position based annotation don't work. So the `startOffset` and `endOffset` properties refer to the position within the XPath that has been matched.
-
-The XPaths you can provide are a subset of normal XPaths:
-
-1. The XPath must be relative from the RichText it is matching text in. For the `core/paragraph` this means that the XPath must match the HTML content in the paragraph block.
-1. The XPath must be continuous: It must have all depths of the tree. So to match a `strong` inside an `em` you must use: `strong[1]/em[1]/text()[1]`.
-1. The last node in the XPath must be a `text()` node. So `strong[1]` is a valid XPath, but will not work for this API.
-
-Note: XPaths start from index `1`, not `0`. So to match the first `a` in a paragraph you need to use `a[1]`, to match the third you use `a[3]`.
+The text annotation is controled by the `start` and `end` properties. Simple `start` and `end` properties don't work for HTML, so these properties are assumed to be offsets within the `rich-text` internal structure. For simplicity you can think about this as if all HTML would be stripped out and then you calculate the `start` and the `end` of the annotation.
