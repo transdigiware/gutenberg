@@ -2,7 +2,7 @@
 
 ### New feature
 
-- `getBlockAttributes`, `getSaveContent`, `getSaveElement` and `isValidBlockContent` methods can now take also block's name as the first param ([#11490](https://github.com/WordPress/gutenberg/pull/11490)). Passing a block's type object continues to work as before.
+- `getBlockAttributes`, `getSaveContent`, `getSaveElement`, and `isValidBlockContent` methods can now take also block's name as the first param ([#11490](https://github.com/WordPress/gutenberg/pull/11490)). Passing a block's type object continues to work as before.
 
 ## 5.1.2 (2018-11-03)
 
