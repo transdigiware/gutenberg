@@ -52,6 +52,10 @@ const blockAttributes = {
 			},
 		},
 	},
+	ids: {
+		type: 'array',
+		default: [],
+	},
 	columns: {
 		type: 'number',
 	},
