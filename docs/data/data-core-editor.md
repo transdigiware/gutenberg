@@ -1835,19 +1835,16 @@ The `block` attribute refers to a block ID that needs to be annotated.
 annotation. The `source` is the source of the annotation, this will be used
 to identity groups of annotations.
 
-The `startXpath`, `startOffset`, `endXPath` and `endOffset` arguments are
-only relevant when the annotation is not a block annotation.
+The `range` property is only relevant if the selector is 'range'.
 
 *Parameters*
 
  * annotation: The annotation to add.
  * blockClientId: The blockClientId to add the annotation to.
  * richTextIdentifier: Identifier for the RichText instance the annotation applies to.
- * range: The range at which to apply this annotaiton.
- * range.startXPath: The XPath where the annotation should start.
- * range.startOffset: The offset where the annotation should start.
- * range.endXPath: The XPath where the annotation should end.
- * range.endOffset: The offset where the annotation should end.
+ * range: The range at which to apply this annotation.
+ * range.start: The offset where the annotation should start.
+ * range.end: The offset where the annotation should end.
  * string: [selector="range"] The way to apply this annotation.
  * string: [source="default"] The source that added the annotation.
  * string: [id=uuid()]        The ID the annotation should have.
