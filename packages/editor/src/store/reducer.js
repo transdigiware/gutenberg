@@ -222,9 +222,11 @@ export const editor = flow( [
 				return nextState;
 			}
 
-			// For each changed block in the present, check for any attribute
-			// that _isn't_ part of the block type. If such an attribute is
-			// found, delete it from the state.
+			// For each changed block in the present, check for any silent
+			// attribute. If such an attribute is found, delete it from the
+			// state.
+			//
+			// @see getSilentAttributes for context
 			let blockId, block, attributeName;
 			for ( blockId in present.blocks.byClientId ) {
 				block = present.blocks.byClientId[ blockId ];
@@ -235,6 +237,7 @@ export const editor = flow( [
 				}
 
 				for ( attributeName in block.attributes ) {
+					// A leading underscore indicates a silent attribute
 					if ( attributeName.indexOf( '_' ) === 0 ) {
 						// If this is the first match in the loop, lazily
 						// create a new state object.
