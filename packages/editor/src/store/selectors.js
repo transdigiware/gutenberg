@@ -2123,10 +2123,24 @@ export const getAnnotationsForBlock = createSelector(
 	]
 );
 
+/**
+ * Returns the annotations that apply to the given RichText instance.
+ *
+ * Both a blockClientId and a richTextIdentifier are required. This is because
+ * a block might have multiple `RichText` components. This does mean that every
+ * block needs to implement annotations itself.
+ *
+ * @param {Object} state              Editor state.
+ * @param {string} blockClientId      The client ID for the block.
+ * @param {string} richTextIdentifier Unique identifier that identifies the given RichText.
+ * @return {Array} All the annotations relevant for the `RichText`.
+ */
 export const getAnnotationsForRichText = createSelector(
-	( state, blockClientId ) => {
+	( state, blockClientId, richTextIdentifier ) => {
 		return state.annotations.all.filter( ( annotation ) => {
-			return annotation.selector === 'range' && annotation.blockClientId === blockClientId;
+			return annotation.selector === 'range' &&
+				annotation.blockClientId === blockClientId &&
+				richTextIdentifier === annotation.blockAttribute;
 		} ).map( ( annotation ) => {
 			const { range, ...other } = annotation;
 
@@ -2141,6 +2155,12 @@ export const getAnnotationsForRichText = createSelector(
 	]
 );
 
+/**
+ * Returns all annotations in the editor state.
+ *
+ * @param {Object} state Editor state.
+ * @return {Array} All annotations currently applied.
+ */
 export function getAnnotations( state ) {
 	return state.annotations.all;
 }

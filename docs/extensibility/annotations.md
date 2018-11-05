@@ -10,6 +10,7 @@ To see the API for yourself the easiest way is to have a block that is at least 
 wp.data.dispatch( 'core/editor' ).addAnnotation( {
 	source: "my-annotations-plugin",
 	blockClientId: wp.data.select( 'core/editor' ).getBlockOrder()[0],
+	blockAttribute: "content",
 	range: {
 		startXPath: "text()[1]",
 		startOffset: 50,
@@ -25,6 +26,7 @@ If you add some bold text to that same block, you can annotate inside the bold t
 wp.data.dispatch( 'core/editor' ).addAnnotation( {
 	source: "my-annotations-plugin",
 	blockClientId: wp.data.select( 'core/editor' ).getBlockOrder()[0],
+	blockAttribute: "content",
 	range: {
 		startXPath: "text()[1]",
 		startOffset: 5,

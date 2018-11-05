@@ -1009,14 +1009,19 @@ const RichTextContainer = compose( [
 		const { isViewportMatch } = select( 'core/viewport' );
 		const { canUserUseUnfilteredHTML, isCaretWithinFormattedText, getAnnotationsForRichText } = select( 'core/editor' );
 
-		const annotations = getAnnotationsForRichText( props.clientId );
-
-		return {
+		const selectProps = {
 			isViewportSmall: isViewportMatch( '< small' ),
 			canUserUseUnfilteredHTML: canUserUseUnfilteredHTML(),
 			isCaretWithinFormattedText: isCaretWithinFormattedText(),
-			annotations,
 		};
+
+		// Allow explicit annotations to be passed in.
+		// When an identifier is passed in we can retrieve the annotations for this RichText.
+		if ( ! props.annotations && props.identifier ) {
+			selectProps.annotations = getAnnotationsForRichText( props.clientId, props.identifier );
+		}
+
+		return selectProps;
 	} ),
 	withDispatch( ( dispatch ) => {
 		const {

@@ -220,6 +220,7 @@ class ParagraphBlock extends Component {
 				</InspectorControls>
 				<RichText
 					tagName="p"
+					identifier="content"
 					className={ classnames( 'wp-block-paragraph', className, {
 						'has-text-color': textColor.color,
 						'has-background': backgroundColor.color,
