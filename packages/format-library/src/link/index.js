@@ -22,9 +22,8 @@ const name = 'core/link';
 export const link = {
 	name,
 	title: __( 'Link' ),
-	match: {
-		tagName: 'a',
-	},
+	tagName: 'a',
+	canHandleBareElement: true,
 	attributes: {
 		url: 'href',
 		target: 'target',

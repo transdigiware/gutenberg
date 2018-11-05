@@ -16,14 +16,11 @@ function fromFormat( { type, attributes, object } ) {
 		return { type, attributes, object };
 	}
 
-	if ( ! attributes ) {
-		return {
-			type: formatType.match.tagName,
-			object: formatType.object,
-		};
-	}
-
 	const elementAttributes = {};
+
+	if ( ! formatType.canHandleBareElement ) {
+		elementAttributes[ 'data-format-type' ] = formatType.name;
+	}
 
 	for ( const name in attributes ) {
 		const key = formatType.attributes[ name ];
@@ -36,7 +33,7 @@ function fromFormat( { type, attributes, object } ) {
 	}
 
 	return {
-		type: formatType.match.tagName,
+		type: formatType.tagName,
 		object: formatType.object,
 		attributes: elementAttributes,
 	};

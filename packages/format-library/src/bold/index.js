@@ -10,9 +10,8 @@ const name = 'core/bold';
 export const bold = {
 	name,
 	title: __( 'Bold' ),
-	match: {
-		tagName: 'strong',
-	},
+	tagName: 'strong',
+	canHandleBareElement: true,
 	edit( { isActive, value, onChange, ToolbarButton, Shortcut } ) {
 		const onToggle = () => onChange( toggleFormat( value, { type: name } ) );
 
