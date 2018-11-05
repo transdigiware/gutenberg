@@ -1842,7 +1842,7 @@ only relevant when the annotation is not a block annotation.
 
  * annotation: The annotation to add.
  * blockClientId: The blockClientId to add the annotation to.
- * blockAttribute: The attribute of the block to add the annotation to.
+ * richTextIdentifier: Identifier for the RichText instance the annotation applies to.
  * range: The range at which to apply this annotaiton.
  * range.startXPath: The XPath where the annotation should start.
  * range.startOffset: The offset where the annotation should start.

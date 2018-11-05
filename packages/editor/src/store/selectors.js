@@ -2140,7 +2140,7 @@ export const getAnnotationsForRichText = createSelector(
 		return state.annotations.all.filter( ( annotation ) => {
 			return annotation.selector === 'range' &&
 				annotation.blockClientId === blockClientId &&
-				richTextIdentifier === annotation.blockAttribute;
+				richTextIdentifier === annotation.richTextIdentifier;
 		} ).map( ( annotation ) => {
 			const { range, ...other } = annotation;
 
