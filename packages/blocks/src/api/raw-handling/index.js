@@ -7,7 +7,6 @@ import { flatMap, filter, compact } from 'lodash';
  * Internal dependencies
  */
 import { createBlock, getBlockTransforms, findTransform } from '../factory';
-import { getBlockType } from '../registration';
 import { getBlockContent } from '../serializer';
 import { getBlockAttributes, parseWithGrammar } from '../parser';
 import normaliseBlocks from './normalise-blocks';
@@ -202,7 +201,7 @@ export default function rawHandler( { HTML = '', plainText = '', mode = 'AUTO', 
 			return createBlock(
 				blockName,
 				getBlockAttributes(
-					getBlockType( blockName ),
+					blockName,
 					node.outerHTML
 				)
 			);
