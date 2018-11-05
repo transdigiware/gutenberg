@@ -43,6 +43,7 @@ export default function HeadingEdit( {
 			</InspectorControls>
 			<RichText
 				wrapperClassName="wp-block-heading"
+				identifier="content"
 				tagName={ tagName }
 				value={ content }
 				onChange={ ( value ) => setAttributes( { content: value } ) }
