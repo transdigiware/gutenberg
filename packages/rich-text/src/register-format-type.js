@@ -72,6 +72,13 @@ export function registerFormatType( name, settings ) {
 		return;
 	}
 
+	if ( ! /^[_a-zA-Z]+[a-zA-Z0-9-]*$/.test( settings.className ) ) {
+		window.console.error(
+			'A class name must begin with a letter, followed by any number of hyphens, letters, or numbers.'
+		);
+		return;
+	}
+
 	if ( settings.className === null ) {
 		const formatTypeForBareElement = select( 'core/rich-text' )
 			.getFormatTypeForBareElement( settings.tagName );

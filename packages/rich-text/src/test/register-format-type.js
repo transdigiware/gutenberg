@@ -76,6 +76,14 @@ describe( 'registerFormatType', () => {
 		expect( console ).toHaveErroredWith( 'Format class names must be a string, or null to handle bare elements.' );
 	} );
 
+	it( 'should error on invalid className property', () => {
+		registerFormatType( validName, {
+			...validSettings,
+			className: 'invalid class name',
+		} );
+		expect( console ).toHaveErroredWith( 'A class name must begin with a letter, followed by any number of hyphens, letters, or numbers.' );
+	} );
+
 	it( 'should error on already registered tagName', () => {
 		registerFormatType( validName, validSettings );
 		registerFormatType( 'plugin/second', validSettings );
