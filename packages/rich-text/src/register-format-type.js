@@ -78,7 +78,7 @@ export function registerFormatType( name, settings ) {
 
 		if ( formatTypeForBareElement ) {
 			window.console.error(
-				`Format ${ formatTypeForBareElement.name } is already registered to handle bare ${ settings.tagName }`
+				`Format "${ formatTypeForBareElement.name }" is already registered to handle bare tag name "${ settings.tagName }".`
 			);
 			return;
 		}
@@ -88,7 +88,7 @@ export function registerFormatType( name, settings ) {
 
 		if ( formatTypeForClassName ) {
 			window.console.error(
-				`Format ${ formatTypeForClassName.name } is already registered to handle className ${ settings.className }`
+				`Format "${ formatTypeForClassName.name }" is already registered to handle class name "${ settings.className }".`
 			);
 			return;
 		}
